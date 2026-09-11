@@ -1,0 +1,746 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><style>[hidden]{display:none!important}</style></head><body style="margin:0"><title>Donut Pilot Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f3f0; --surface:#ffffff; --surface-2:#eceae5; --line:#d9d6cf; --line-soft:#e8e6e0;
+  --ink:#1c1b19; --ink-2:#55524c; --ink-3:#8a867d;
+  --test:#d9531e; --test-soft:#f6d9cb; --ctl:#4f6d8f; --ctl-soft:#d5dde7;
+  --good:#1f7a1f; --good-bg:#e3f1e3; --warn:#b97a00; --warn-bg:#fbefd2; --bad:#c62f2f; --bad-bg:#f9dede;
+  --pre-band:#ebe9e3; --dial50:#f3ede4; --dial100:#fbf4ee; --sample:#6b4fbb;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#161614; --surface:#1f1f1c; --surface-2:#2a2a26; --line:#3a3a35; --line-soft:#2e2e2a;
+    --ink:#f2f0ea; --ink-2:#bdb9af; --ink-3:#847f75;
+    --test:#f0733d; --test-soft:#4a2a1c; --ctl:#7f9dbf; --ctl-soft:#26323f;
+    --good:#4fbf4f; --good-bg:#1d2f1d; --warn:#e0a531; --warn-bg:#3a2e12; --bad:#ef6b6b; --bad-bg:#3d1c1c;
+    --pre-band:#242421; --dial50:#2a251f; --dial100:#2e2620; --sample:#a48ff0;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#161614; --surface:#1f1f1c; --surface-2:#2a2a26; --line:#3a3a35; --line-soft:#2e2e2a;
+  --ink:#f2f0ea; --ink-2:#bdb9af; --ink-3:#847f75;
+  --test:#f0733d; --test-soft:#4a2a1c; --ctl:#7f9dbf; --ctl-soft:#26323f;
+  --good:#4fbf4f; --good-bg:#1d2f1d; --warn:#e0a531; --warn-bg:#3a2e12; --bad:#ef6b6b; --bad-bg:#3d1c1c;
+  --pre-band:#242421; --dial50:#2a251f; --dial100:#2e2620; --sample:#a48ff0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans",system-ui,Segoe UI,Arial,sans-serif;padding-block:0 40px;padding-inline:20px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:22px 14px;border-bottom:1px solid var(--line)}
+h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-.01em}
+.sub{color:var(--ink-2);margin-top:4px}
+.sample{display:inline-flex;align-items:center;gap:8px;background:var(--sample);color:#fff;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:3px}
+.legend{display:flex;gap:16px;align-items:center;color:var(--ink-2);font-size:13px}
+.sw{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.sw.test{background:var(--test)} .sw.ctl{background:var(--ctl)}
+h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;margin:28px 0 10px}
+/* status strip */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--line);background:var(--surface);border-radius:4px;overflow:hidden}
+.strip>div{padding:12px 14px;border-right:1px solid var(--line-soft)}
+.strip>div:last-child{border-right:0}
+.k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.v{font-size:20px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+.v small{font-size:12px;font-weight:500;color:var(--ink-2);margin-left:4px}
+.n{font-size:12px;color:var(--ink-2);margin-top:2px}
+/* verdicts */
+.verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:16px 18px;position:relative}
+.card .q{font-size:15px;font-weight:600}
+.card .big{font-size:34px;font-weight:600;line-height:1.1;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.card .big span{display:block;font-size:13px;color:var(--ink-2);font-weight:500;margin-top:2px}
+.card .exp{color:var(--ink-2);font-size:13px}
+.pill{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.na{background:var(--surface-2);color:var(--ink-2)}
+:root{--na:var(--ink-2)}
+/* charts */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px}
+@media (max-width:480px){.grid2{grid-template-columns:1fr}}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 16px 10px}
+.chart .t{font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.chart .t .r{color:var(--ink-2);font-weight:400;font-size:12px}
+.chart svg{width:100%;height:auto;display:block;margin-top:6px;overflow:visible}
+.chart .foot{font-size:12px;color:var(--ink-2);margin-top:6px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:3px;opacity:0;transition:opacity .08s;z-index:9;white-space:nowrap}
+/* table */
+.tblwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:13px}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+td:first-child,th:first-child{text-align:left;white-space:normal;min-width:220px}
+th.test{color:var(--test)} th.ctl{color:var(--ctl)}
+td.did{font-weight:600}
+tr:last-child td{border-bottom:0}
+.chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px}
+.chip.good{background:var(--good-bg);color:var(--good)} .chip.warn{background:var(--warn-bg);color:var(--warn)} .chip.bad{background:var(--bad-bg);color:var(--bad)} .chip.na{background:var(--surface-2);color:var(--ink-2)}
+/* confidence */
+.conf{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.conf .item{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;margin-top:5px}
+.dot.good{background:var(--good)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+.item b{display:block;font-weight:600}
+.item span{color:var(--ink-2);font-size:12.5px}
+.method{color:var(--ink-2);font-size:12.5px;max-width:78ch;margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
+.method p{margin:6px 0}
+
+/* access gate */
+#gate{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+#gate form{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:26px 28px;max-width:360px;width:100%}
+#gate h1{font-size:18px;margin:0 0 4px} #gate p{color:var(--ink-2);font-size:13px;margin:0 0 14px}
+#gate input{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}
+#gate button{margin-top:10px;width:100%;font:inherit;font-weight:600;padding:10px;border:0;border-radius:4px;background:var(--test);color:#fff;cursor:pointer}
+#gate .err{color:var(--bad);font-size:12.5px;min-height:16px;margin-top:8px}
+body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
+</style>
+
+<div id="gate" hidden><form id="gateForm"><h1>Donut Pilot Tracker</h1><p>Enter the access password to view.</p><input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password"><button type="submit">Open</button><div class="err" id="gateErr"></div></form></div>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Donut Pilot Tracker</h1>
+    <div class="sub" id="subline">37 test stores on model pars vs. 19 matched controls. Pooled weekly, difference-in-differences against the 8-week pre-period.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <span class="sample" id="sampleBadge">Sample data, not live</span>
+    <div class="legend"><span><span class="sw test"></span>Test (37)</span><span><span class="sw ctl"></span>Control (19)</span><span id="asof"></span></div>
+  </div>
+</header>
+
+<h2>Pilot status</h2>
+<div class="strip" id="strip"></div>
+
+<h2>The three questions that decide rollout</h2>
+<div class="verdicts" id="verdicts"></div>
+
+<h2>Waste</h2>
+<div class="grid2">
+  <div class="chart" id="c_dw"></div>
+  <div class="chart" id="c_mw"></div>
+</div>
+
+<h2>Availability guardrail (pooled, cumulative since pars went live)</h2>
+<div class="grid2">
+  <div class="chart" id="c_sod"></div>
+  <div class="chart" id="c_som"></div>
+</div>
+
+<h2>Sales protection and money</h2>
+<div class="grid2">
+  <div class="chart" id="c_units"></div>
+  <div class="chart" id="c_usd"></div>
+</div>
+
+<h2>Scorecard</h2>
+<div class="tblwrap"><table id="tbl"></table></div>
+
+<h2>Can I trust this week's numbers?</h2>
+<div class="conf" id="conf"></div>
+
+<div class="method">
+  <p><b>How to read it.</b> Every metric is pooled across the cohort (never a per-store weekly verdict). Pre = 8 weeks before the first par change. DiD = (Test now minus Test pre) minus (Control now minus Control pre); it strips out demand, weather and seasonality that hit both arms. Waste is implied: units invoiced minus units sold in POS, never the store waste log. Sell-out before 2pm uses the calibrated POS last-sale rule (last in-store sale 2+ hours before close, volume floor 36 donut / 120 munchkin, waste buffer 24 / 60).</p>
+  <p><b>Pass/fail lines.</b> Only two: pooled pre-2pm sell-outs at or under 2.5% donut / 4.6% munchkin (two consecutive weeks over = add back one dozen on the offending day-of-week pars), and bakery units within ±2% of control. Waste and net $ have expected levels that move with the dial; they are targets, not gates.</p>
+</div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ---------- access gate: runs FIRST, pure-JS SHA-256 so it works in any sandbox (a speed bump, not a vault) ---------- */
+(function(){
+  function sha256(str){var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+    var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    var bytes=unescape(encodeURIComponent(str)).split("").map(function(c){return c.charCodeAt(0)});
+    var l=bytes.length,bitLen=l*8; bytes.push(0x80); while(bytes.length%64!==56) bytes.push(0);
+    for(var i=7;i>=0;i--) bytes.push(i>=4?0:(bitLen>>>(i*8))&0xff);
+    var w=new Array(64);
+    for(var off=0;off<bytes.length;off+=64){
+      for(var t=0;t<16;t++) w[t]=(bytes[off+t*4]<<24)|(bytes[off+t*4+1]<<16)|(bytes[off+t*4+2]<<8)|bytes[off+t*4+3];
+      for(t=16;t<64;t++){var s0=rotr(w[t-15],7)^rotr(w[t-15],18)^(w[t-15]>>>3),s1=rotr(w[t-2],17)^rotr(w[t-2],19)^(w[t-2]>>>10);w[t]=(w[t-16]+s0+w[t-7]+s1)|0;}
+      var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+      for(t=0;t<64;t++){var S1=rotr(e,6)^rotr(e,11)^rotr(e,25),ch=(e&f)^(~e&g),t1=(h+S1+ch+K[t]+w[t])|0,S0=rotr(a,2)^rotr(a,13)^rotr(a,22),mj=(a&b)^(a&c)^(b&c),t2=(S0+mj)|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
+      H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;
+    }
+    function rotr(x,n){return (x>>>n)|(x<<(32-n));}
+    return H.map(function(x){return ("00000000"+(x>>>0).toString(16)).slice(-8)}).join("");
+  }
+  var HASH="5a22daeda0f72cf6d16e5d09fb4bf1e390412c5d3016f890e620a46ad0ea8a87", KEY="dpt_ok_v2";
+  var ok=false; try{ ok = localStorage.getItem(KEY)===HASH; }catch(e){}
+  var gate=document.getElementById("gate"), pw=document.getElementById("gatePw"), err=document.getElementById("gateErr");
+  if(ok) return;
+  document.body.classList.add("locked"); gate.hidden=false; gate.style.display="flex";
+  setTimeout(function(){ try{pw.focus();}catch(e){} },50);
+  document.getElementById("gateForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    try{
+      var hex=sha256((pw.value||"").trim());
+      if(hex===HASH){ try{ localStorage.setItem(KEY,HASH); }catch(e){} gate.hidden=true; gate.style.display="none"; document.body.classList.remove("locked"); }
+      else { err.textContent="That password did not match."; pw.select(); }
+    }catch(e){ err.textContent="Could not check the password in this browser: "+e.message; }
+  });
+})();
+
+/* ==DATA_START== (pilot_pull.py rewrites everything between these markers) */
+const DATA = {
+ "meta": {
+  "sample": false,
+  "generated": "2026-09-11 03:27 (pulled by Claude via Fabric MCP)",
+  "pilot_start": "2026-09-07",
+  "full_dial_start": "2026-09-21",
+  "pre_start": "2026-07-13",
+  "freshness": {
+   "orders": "2026-09-10",
+   "invoices": "2026-09-10",
+   "pos": "2026-09-09"
+  },
+  "n_test": 37,
+  "n_ctl": 19,
+  "tests_reporting": 37,
+  "ctls_reporting": 19,
+  "cfo_tieout_pct": null,
+  "pos_days_missing": 0,
+  "provisional_days": 0,
+  "ceilings": {
+   "so_d": 2.5,
+   "so_m": 4.6,
+   "units_band": 2.0
+  },
+  "expected": {
+   "donut": {
+    "50": 19.5,
+    "100": 14.5
+   },
+   "munch": {
+    "50": 26.5,
+    "100": 19.0
+   },
+   "cut": {
+    "50": -8,
+    "100": -16
+   }
+  },
+  "rule": {
+   "floor": {
+    "donut": 36,
+    "munchkin": 120
+   },
+   "buffer": {
+    "donut": 24,
+    "munchkin": 60
+   },
+   "close_gap_hours": 2,
+   "am_cutoff_hour": 14,
+   "cost_per_piece": {
+    "donut": 0.386,
+    "munchkin": 0.107
+   }
+  }
+ },
+ "weeks": [
+  {
+   "wk": "2026-07-13",
+   "phase": "pre",
+   "test": {
+    "dw": 18.112,
+    "mw": 29.742,
+    "sod": 1.544,
+    "som": 2.703,
+    "units": 805.81,
+    "bev": 500.47,
+    "tkt": 9.599,
+    "usd": 50.246,
+    "otherbak": 38.97,
+    "override": 6.511,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 14.125,
+    "mw": 24.127,
+    "sod": 2.256,
+    "som": 5.263,
+    "units": 939.08,
+    "bev": 548.32,
+    "tkt": 9.521,
+    "usd": 43.266,
+    "otherbak": 44.39,
+    "override": 4.998,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-07-20",
+   "phase": "pre",
+   "test": {
+    "dw": 17.348,
+    "mw": 30.465,
+    "sod": 0.772,
+    "som": 1.158,
+    "units": 798.7,
+    "bev": 504.83,
+    "tkt": 9.612,
+    "usd": 49.432,
+    "otherbak": 40.41,
+    "override": 6.228,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 14.709,
+    "mw": 22.433,
+    "sod": 0.752,
+    "som": 6.015,
+    "units": 958.66,
+    "bev": 558.56,
+    "tkt": 9.58,
+    "usd": 44.227,
+    "otherbak": 44.8,
+    "override": 5.067,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-07-27",
+   "phase": "pre",
+   "test": {
+    "dw": 18.628,
+    "mw": 30.423,
+    "sod": 1.931,
+    "som": 5.405,
+    "units": 802.7,
+    "bev": 505.22,
+    "tkt": 9.61,
+    "usd": 51.521,
+    "otherbak": 39.67,
+    "override": 6.52,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 13.673,
+    "mw": 21.531,
+    "sod": 2.256,
+    "som": 3.759,
+    "units": 963.64,
+    "bev": 561.65,
+    "tkt": 9.59,
+    "usd": 41.507,
+    "otherbak": 44.8,
+    "override": 5.03,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-08-03",
+   "phase": "pre",
+   "test": {
+    "dw": 19.178,
+    "mw": 32.725,
+    "sod": 1.931,
+    "som": 1.544,
+    "units": 785.68,
+    "bev": 516.13,
+    "tkt": 9.444,
+    "usd": 54.775,
+    "otherbak": 39.46,
+    "override": 5.633,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 14.861,
+    "mw": 24.879,
+    "sod": 0.752,
+    "som": 3.008,
+    "units": 957.53,
+    "bev": 570.65,
+    "tkt": 9.395,
+    "usd": 46.718,
+    "otherbak": 45.2,
+    "override": 4.569,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-08-10",
+   "phase": "pre",
+   "test": {
+    "dw": 25.734,
+    "mw": 34.862,
+    "sod": 0.0,
+    "som": 3.089,
+    "units": 736.76,
+    "bev": 495.18,
+    "tkt": 9.19,
+    "usd": 65.408,
+    "otherbak": 38.27,
+    "override": 6.653,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 21.137,
+    "mw": 28.747,
+    "sod": 0.752,
+    "som": 2.256,
+    "units": 892.21,
+    "bev": 542.38,
+    "tkt": 9.203,
+    "usd": 60.576,
+    "otherbak": 41.85,
+    "override": 4.952,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-08-17",
+   "phase": "pre",
+   "test": {
+    "dw": 22.497,
+    "mw": 31.086,
+    "sod": 1.158,
+    "som": 0.772,
+    "units": 798.34,
+    "bev": 502.59,
+    "tkt": 9.35,
+    "usd": 60.208,
+    "otherbak": 42.39,
+    "override": 4.392,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 18.751,
+    "mw": 26.819,
+    "sod": 0.752,
+    "som": 1.504,
+    "units": 938.6,
+    "bev": 561.49,
+    "tkt": 9.365,
+    "usd": 54.787,
+    "otherbak": 47.59,
+    "override": 4.181,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-08-24",
+   "phase": "pre",
+   "test": {
+    "dw": 22.041,
+    "mw": 31.005,
+    "sod": 0.386,
+    "som": 2.317,
+    "units": 795.89,
+    "bev": 500.87,
+    "tkt": 9.037,
+    "usd": 56.601,
+    "otherbak": 43.03,
+    "override": 2.504,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 19.426,
+    "mw": 25.542,
+    "sod": 0.752,
+    "som": 4.511,
+    "units": 940.62,
+    "bev": 551.5,
+    "tkt": 9.09,
+    "usd": 54.915,
+    "otherbak": 46.95,
+    "override": 2.046,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-08-31",
+   "phase": "pre",
+   "test": {
+    "dw": 21.579,
+    "mw": 31.525,
+    "sod": 0.386,
+    "som": 1.158,
+    "units": 777.95,
+    "bev": 494.57,
+    "tkt": 9.318,
+    "usd": 54.89,
+    "otherbak": 42.53,
+    "override": 2.737,
+    "stores": 37,
+    "store_days": 259,
+    "days": 7.0,
+    "cut": null
+   },
+   "ctl": {
+    "dw": 18.632,
+    "mw": 25.001,
+    "sod": 0.0,
+    "som": 4.511,
+    "units": 924.35,
+    "bev": 535.04,
+    "tkt": 9.405,
+    "usd": 51.567,
+    "otherbak": 48.03,
+    "override": 2.242,
+    "stores": 19,
+    "store_days": 133,
+    "days": 7.0,
+    "drift": null
+   }
+  },
+  {
+   "wk": "2026-09-07",
+   "phase": "50",
+   "test": {
+    "dw": 21.158,
+    "mw": 32.392,
+    "sod": 2.703,
+    "som": 0.901,
+    "units": 730.3,
+    "bev": 484.3,
+    "tkt": 8.864,
+    "usd": 51.615,
+    "otherbak": 44.05,
+    "override": 4.428,
+    "stores": 37,
+    "store_days": 111,
+    "days": 3.0,
+    "cut": -6.1
+   },
+   "ctl": {
+    "dw": 19.515,
+    "mw": 25.474,
+    "sod": 3.571,
+    "som": 3.571,
+    "units": 841.55,
+    "bev": 522.96,
+    "tkt": 8.879,
+    "usd": 48.133,
+    "otherbak": 44.68,
+    "override": 3.035,
+    "stores": 19,
+    "store_days": 56,
+    "days": 2.9,
+    "drift": -9.08
+   }
+  }
+ ]
+};
+/* ==DATA_END== */
+
+const NT = DATA.meta.n_test||37, NC = DATA.meta.n_ctl||19;
+const W = DATA.weeks, PRE = W.filter(w=>w.phase==="pre"), POST = W.filter(w=>w.phase!=="pre"), FULL = W.filter(w=>w.phase==="100");
+const EVAL = FULL.length ? FULL : POST, EVAL_LABEL = FULL.length ? "full dial" : "50% dial", EVAL_PHASE = FULL.length ? "100" : "50";
+const last = W[W.length-1];
+const mean = a=>a.reduce((s,x)=>s+x,0)/a.length;
+const pre = (arm,k)=>mean(PRE.map(w=>w[arm][k]));
+const fmt = (x,d=1)=>x==null?"–":x.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+const sgn = (x,d=1,unit="")=> (x>0?"+":"")+fmt(x,d)+unit;
+const css = v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* DiD in percentage points (pp) for rates, % for levels */
+function did(k, mode="pp", weeks=EVAL){
+  if(!weeks.length) return null;
+  const t=mean(weeks.map(w=>w.test[k])), c=mean(weeks.map(w=>w.ctl[k]));
+  const tp=pre("test",k), cp=pre("ctl",k);
+  if(mode==="pp") return (t-tp)-(c-cp);
+  return ((t/tp-1)-(c/cp-1))*100;
+}
+/* pooled cumulative rate since full dial, with 95% CI (store-days) */
+function pooled(k, arm, weeks=EVAL){
+  if(!weeks.length) return null;
+  const n = weeks.reduce((s,w)=>s+((w[arm]&&w[arm].store_days)||((arm==="test"?NT:NC)*7)),0);
+  const p = mean(weeks.map(w=>w[arm][k]))/100;
+  const se = Math.sqrt(p*(1-p)/n)*100;
+  return {rate:p*100, lo:p*100-1.96*se, hi:p*100+1.96*se, n};
+}
+
+/* ---------- status strip ---------- */
+const dialLabel = last.phase==="pre"?"Not started":last.phase+"%";
+const fullWeeks = FULL.length, storeDays = EVAL.reduce((s,w)=>s+((w.test&&w.test.store_days)||NT*7),0);
+const oldest = Object.values(DATA.meta.freshness).sort()[0];
+const cutLast = last.test.cut, cutExp = DATA.meta.expected.cut[last.phase], cutOK = v=>v==null?'na':(v<=cutExp*0.75?'good':v<=cutExp*0.4?'warn':'bad');
+const drift = POST.length? mean(POST.map(w=>w.ctl.drift)) : null;
+document.getElementById("strip").innerHTML = [
+  ["Dial in force", `<span class="v">${dialLabel}</span>`, `since ${last.phase==="100"?DATA.meta.full_dial_start:DATA.meta.pilot_start}`],
+  ["Weeks at full dial", `<span class="v">${fullWeeks}<small>of 8 minimum</small></span>`, `${POST.length} week${POST.length===1?"":"s"} on pars so far, ${storeDays.toLocaleString()} test store-days${last.test&&last.test.days&&last.test.days<6?` (latest week partial: ${last.test.days} days)`:""}`],
+  ["Orders cut vs. pre-period", `<span class="v" style="color:${css('--'+cutOK(cutLast))}">${cutLast==null?"–":sgn(cutLast,1,"%")}</span>`, `test stores, units ordered per store-day, last week (expect about ${cutExp==null?"–":cutExp+"%"} at ${dialLabel})`],
+  ["Control order drift", `<span class="v" style="color:${Math.abs(drift)<=1.5?css('--good'):css('--warn')}">${sgn(drift,1,"%")}</span>`, "vs. their pre-period (should be ~0)"],
+  ["Data through", `<span class="v mono" style="font-size:16px">${oldest}</span>`, `orders ${DATA.meta.freshness.orders.slice(5)} · invoices ${DATA.meta.freshness.invoices.slice(5)} · POS ${DATA.meta.freshness.pos.slice(5)}`]
+].map(([k,v,n])=>`<div><div class="k">${k}</div>${v}<div class="n">${n}</div></div>`).join("");
+document.getElementById("subline").innerHTML = `${NT} test stores on model pars vs. ${NC} matched controls. Pooled weekly, difference-in-differences against the 8-week pre-period.`;
+document.getElementById("asof").textContent = "Updated " + DATA.meta.generated;
+if(!DATA.meta.sample) document.getElementById("sampleBadge").style.display="none";
+
+/* ---------- verdicts ---------- */
+const dDW = did("dw"), dMW = did("mw"), dUnits = did("units","pct"), dBev = did("bev","pct"), dUsd = did("usd");
+const pSod = pooled("sod","test"), pSom = pooled("som","test");
+const breach = (k,ceil)=>{ let run=0,max=0; for(const w of EVAL){ run = w.test[k]>ceil? run+1:0; max=Math.max(max,run);} return max; };
+const bD = breach("sod",DATA.meta.ceilings.so_d), bM = breach("som",DATA.meta.ceilings.so_m);
+const notStarted = !EVAL.length;
+function pill(state,label){return `<span class="pill ${state}">${label}</span>`;}
+const v = [];
+v.push({q:"Is waste down vs. control?", big: notStarted?"–":sgn(dDW,1," pp"), unit:`donut waste, DiD over ${EVAL_LABEL} weeks`,
+  exp:`Munchkin ${notStarted?"–":sgn(dMW,1," pp")}. Expected at ${dialLabel} dial: donut ${DATA.meta.expected.donut[last.phase]||"–"}%, munchkin ${DATA.meta.expected.munch[last.phase]||"–"}%. Waste $/store-day ${notStarted?"–":sgn(dUsd,1)} vs. control.`,
+  state: notStarted?["na","not started"]: dDW<=-5?["good","yes"]: dDW<=-2?["warn","partly"]:["bad","no"]});
+v.push({q:"Is the morning protected?", big: notStarted?"–":fmt(pSod.rate,2)+"%", unit:"pooled pre-2pm sell-outs, donut",
+  exp:`Ceiling ${DATA.meta.ceilings.so_d}%; 95% CI ${notStarted?"–":fmt(pSod.lo,2)+" to "+fmt(pSod.hi,2)}%. Munchkin ${notStarted?"–":fmt(pSom.rate,2)}% (ceiling ${DATA.meta.ceilings.so_m}%). Longest run of weeks over ceiling: donut ${bD}, munchkin ${bM}. Two = add back one dozen.`,
+  state: notStarted?["na","not started"]: (bD>=2||bM>=2)?["bad","breached"]: (pSod.hi>DATA.meta.ceilings.so_d||pSom.hi>DATA.meta.ceilings.so_m)?["warn","watch"]:["good","held"]});
+v.push({q:"Are sales protected?", big: notStarted?"–":sgn(dUnits,1,"%"), unit:"bakery units per store-day, DiD",
+  exp:`Harm = more than ${DATA.meta.ceilings.units_band}% below control; up is fine. Beverage units ${notStarted?"–":sgn(dBev,1,"%")}, ticket ${notStarted?"–":sgn(did("tkt","pct"),1,"%")}. AM run-outs cost 8% of beverages, PM run-outs cost nothing.`,
+  state: notStarted?["na","not started"]: dUnits>=-DATA.meta.ceilings.units_band && dBev>=-3?["good","yes"]: dUnits>=-3?["warn","watch"]:["bad","no"]});
+document.getElementById("verdicts").innerHTML = v.map(x=>`<div class="card">${pill(...x.state)}<div class="q">${x.q}</div><div class="big">${x.big}<span>${x.unit}</span></div><div class="exp">${x.exp}</div></div>`).join("");
+
+/* ---------- SVG line chart ---------- */
+const tip = document.getElementById("tip");
+function lineChart(el, opt){
+  const Wd=560, Ht=250, m={l:44,r:14,t:14,b:30};
+  const xs = W.map((_,i)=>i);
+  const series = opt.series; // [{key,color,label,arm}]
+  let vals=[]; series.forEach(s=>vals=vals.concat(W.map(w=>s.get(w)).filter(x=>x!=null)));
+  if(opt.lines) vals=vals.concat(opt.lines.map(l=>l.y));
+  (opt.bands||[]).forEach(b=>W.forEach((w,i)=>{const r=b.get(w,i); if(r) vals=vals.concat(r);}));
+  let lo=Math.min(...vals), hi=Math.max(...vals); const pad=(hi-lo)*0.15||1; lo=Math.max(opt.zero?0:-Infinity, lo-pad); hi=hi+pad;
+  if(opt.zero) lo=0;
+  const x=i=>m.l+(i/(W.length-1))*(Wd-m.l-m.r), y=vv=>m.t+(1-(vv-lo)/(hi-lo))*(Ht-m.t-m.b);
+  const rawStep=(hi-lo)/5, mag=Math.pow(10,Math.floor(Math.log10(rawStep))), step=[1,2,2.5,5,10].map(k=>k*mag).find(k=>k>=rawStep);
+  lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step; if(opt.zero) lo=0;
+  const tv=[]; for(let t=lo;t<=hi+1e-9;t+=step) tv.push(+t.toFixed(6));
+  const cid="clip"+Math.random().toString(36).slice(2);
+  let g=`<defs><clipPath id="${cid}"><rect x="${m.l}" y="${m.t}" width="${Wd-m.l-m.r}" height="${Ht-m.t-m.b}"/></clipPath></defs>`;
+  // phase bands
+  const firstPost = W.findIndex(w=>w.phase!=="pre"), firstFull = W.findIndex(w=>w.phase==="100");
+  const bx = i=>x(i)-(x(1)-x(0))/2, right=Wd-m.r, h=Ht-m.t-m.b;
+  const preEnd = firstPost<0 ? right : bx(firstPost);
+  g+=`<rect x="${m.l}" y="${m.t}" width="${preEnd-m.l}" height="${h}" fill="var(--pre-band)"/>`;
+  g+=`<text x="${(m.l+preEnd)/2}" y="${m.t+12}" text-anchor="middle" font-size="10" fill="var(--ink-3)">PRE-PERIOD</text>`;
+  if(firstPost>=0){
+    const halfEnd = firstFull<0 ? right : bx(firstFull);
+    if(halfEnd>preEnd){ g+=`<rect x="${preEnd}" y="${m.t}" width="${halfEnd-preEnd}" height="${h}" fill="var(--dial50)"/><text x="${(preEnd+halfEnd)/2}" y="${m.t+12}" text-anchor="middle" font-size="10" fill="var(--ink-3)">50%</text>`; }
+    if(firstFull>=0){ g+=`<rect x="${halfEnd}" y="${m.t}" width="${right-halfEnd}" height="${h}" fill="var(--dial100)"/><text x="${(halfEnd+right)/2}" y="${m.t+12}" text-anchor="middle" font-size="10" fill="var(--ink-3)">FULL DIAL</text>`; }
+  }
+  // grid
+  tv.forEach(t=>{g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line-soft)"/><text x="${m.l-6}" y="${y(t)+3.5}" text-anchor="end" font-size="10.5" fill="var(--ink-2)" font-family="IBM Plex Mono,monospace">${opt.fmt(t)}</text>`;});
+  // reference lines
+  (opt.lines||[]).forEach(l=>{g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${y(l.y)}" y2="${y(l.y)}" stroke="${l.color}" stroke-width="1.5" stroke-dasharray="${l.dash||'5 4'}"/><text x="${m.l+6}" y="${y(l.y)-5}" text-anchor="start" font-size="10.5" fill="${l.color}" font-weight="600">${l.label}</text>`;});
+  // bands (CI)
+  g+=`<g clip-path="url(#${cid})">`;
+  (opt.bands||[]).forEach(b=>{ const pts=W.map((w,i)=>{const r=b.get(w,i); return r?[x(i),y(r[0]),y(r[1])]:null;}).filter(Boolean); if(pts.length>1){ g+=`<path d="M${pts.map(p=>p[0]+','+p[1]).join('L')}L${pts.slice().reverse().map(p=>p[0]+','+p[2]).join('L')}Z" fill="${b.color}" opacity=".35"/>`;}});
+  g+=`</g>`;
+  // series
+  series.forEach(s=>{ const pts=W.map((w,i)=>{const val=s.get(w); return val==null?null:[x(i),y(val),val,w];}).filter(Boolean);
+    g+=`<path d="M${pts.map(p=>p[0]+','+p[1]).join('L')}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    pts.forEach((p,j)=>{ const end=j===pts.length-1; g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${end?4.5:3}" fill="${s.color}" stroke="var(--surface)" stroke-width="1.5"/>`; });
+    const e=pts[pts.length-1]; g+=`<text x="${e[0]-8}" y="${e[1]+(s.labelDy||-8)}" text-anchor="end" font-size="11" font-weight="600" fill="var(--ink)" font-family="IBM Plex Mono,monospace">${opt.fmt(e[2])}</text>`;
+  });
+  // x labels (every other week)
+  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="10" fill="var(--ink-2)">${w.wk.slice(5).replace('-','/')}${w.test&&w.test.days&&w.test.days<6?"*":""}</text>`; });
+  g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${Ht-m.b}" y2="${Ht-m.b}" stroke="var(--line)"/>`;
+  // hover targets
+  W.forEach((w,i)=>{ g+=`<rect class="hit" data-i="${i}" x="${x(i)-(x(1)-x(0))/2}" y="${m.t}" width="${x(1)-x(0)}" height="${Ht-m.t-m.b}" fill="transparent"/>`; });
+  el.innerHTML = `<div class="t"><span>${opt.title}</span><span class="r">${opt.right||""}</span></div><svg viewBox="0 0 ${Wd} ${Ht}" role="img" aria-label="${opt.title}">${g}</svg>${opt.foot?`<div class="foot">${opt.foot}</div>`:""}`;
+  el.querySelectorAll(".hit").forEach(h=>{ h.addEventListener("mousemove",ev=>{ const w=W[+h.dataset.i]; tip.innerHTML=`<b>wk ${w.wk}</b> · ${w.phase==="pre"?"pre":w.phase+"% dial"}${w.test&&w.test.days&&w.test.days<6?` · partial, ${w.test.days} days`:""}<br>`+series.map(s=>`${s.label}: ${s.get(w)==null?"–":opt.fmt(s.get(w))}`).join("<br>"); tip.style.opacity=1; tip.style.left=(ev.clientX+12)+"px"; tip.style.top=(ev.clientY-10)+"px"; }); h.addEventListener("mouseleave",()=>tip.style.opacity=0); });
+}
+const T=css('--test'), C=css('--ctl'), GOOD=css('--good'), BAD=css('--bad'), WARN=css('--warn'), INK3=css('--ink-3');
+const pct1=x=>fmt(x,1)+"%", pct2=x=>fmt(x,2)+"%", usd=x=>"$"+fmt(x,0);
+
+lineChart(document.getElementById("c_dw"),{title:"Donut implied waste, % of invoiced",right:"weekly, pooled",fmt:pct1,
+  series:[{label:"Test",color:T,get:w=>w.test.dw},{label:"Control",color:C,get:w=>w.ctl.dw,labelDy:14}],
+  lines:[{y:DATA.meta.expected.donut[100],color:INK3,label:"expected at full dial "+DATA.meta.expected.donut[100]+"%"}],
+  foot:`Pre-period: test ${pct1(pre("test","dw"))}, control ${pct1(pre("ctl","dw"))}. Test starts higher on purpose (picked for waste), so read the gap change, not the gap.`});
+lineChart(document.getElementById("c_mw"),{title:"Munchkin implied waste, % of invoiced",right:"weekly, pooled",fmt:pct1,
+  series:[{label:"Test",color:T,get:w=>w.test.mw},{label:"Control",color:C,get:w=>w.ctl.mw,labelDy:14}],
+  lines:[{y:DATA.meta.expected.munch[100],color:INK3,label:"expected 15 to 23% (midpoint shown)"}],
+  foot:"Munchkin level is uncertain: static model says 15%, fleet frontier 23%. Most munchkin waste is leak and demand variance, not over-ordering."});
+lineChart(document.getElementById("c_sod"),{title:"Donut sell-outs before 2pm, % of store-days",right:"weekly rate; band = pooled 95% CI",fmt:pct2,zero:true,
+  series:[{label:"Test",color:T,get:w=>w.test.sod},{label:"Control",color:C,get:w=>w.ctl.sod,labelDy:14}],
+  lines:[{y:DATA.meta.ceilings.so_d,color:BAD,label:"ceiling "+DATA.meta.ceilings.so_d+"%"}],
+  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const sub=POST.slice(0,POST.indexOf(w)+1); const p=pooled("sod","test",sub); return [p.lo,p.hi]; }}],
+  foot:"One sell-out in a week at one store is 14% for that store; only the pooled band means anything. Two consecutive weekly rates over the ceiling = add back one dozen on the offending weekday pars."});
+lineChart(document.getElementById("c_som"),{title:"Munchkin sell-outs before 2pm, % of store-days",right:"weekly rate; band = pooled 95% CI",fmt:pct2,zero:true,
+  series:[{label:"Test",color:T,get:w=>w.test.som},{label:"Control",color:C,get:w=>w.ctl.som,labelDy:14}],
+  lines:[{y:DATA.meta.ceilings.so_m,color:BAD,label:"ceiling "+DATA.meta.ceilings.so_m+"%"}],
+  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const sub=POST.slice(0,POST.indexOf(w)+1); const p=pooled("som","test",sub); return [p.lo,p.hi]; }}]});
+lineChart(document.getElementById("c_units"),{title:"Bakery units per store-day, indexed to pre-period = 100",right:"the sales-protection gate",fmt:x=>fmt(x,1),
+  series:[{label:"Test",color:T,get:w=>w.test.units/pre("test","units")*100},{label:"Control",color:C,get:w=>w.ctl.units/pre("ctl","units")*100,labelDy:14}],
+  lines:[{y:98,color:WARN,label:"−2% band",dash:"3 3"},{y:102,color:WARN,label:"+2% band",dash:"3 3"}],
+  foot:`Indexed so the two arms share one scale. Beverage units DiD ${notStarted?"–":sgn(dBev,1,"%")}; average ticket DiD ${notStarted?"–":sgn(did("tkt","pct"),1,"%")}.`});
+lineChart(document.getElementById("c_usd"),{title:"Waste $ per store-day (bakery cost)",right:"donuts + munchkins at JERA cost",fmt:usd,zero:true,
+  series:[{label:"Test",color:T,get:w=>w.test.usd},{label:"Control",color:C,get:w=>w.ctl.usd,labelDy:-8}],
+  lines:[{y:42,color:GOOD,label:"program goal $42"}],
+  foot:`Test pre ${usd(pre("test","usd"))} → now ${usd(last.test.usd)}; DiD ${notStarted?"–":sgn(dUsd,1)}/store-day ≈ ${notStarted?"–":sgn(dUsd*37*365/1000,0,"k")}/yr across 37 stores before the AM run-out cost.`});
+
+/* ---------- scorecard table ---------- */
+const rows = [
+  {m:"Donut implied waste % (invoiced − sold)",k:"dw",f:pct1,mode:"pp",exp:`50%: ${DATA.meta.expected.donut[50]}% · 100%: ${DATA.meta.expected.donut[100]}%`,judge:d=>d<=-5?"good":d<=-2?"warn":"bad"},
+  {m:"Munchkin implied waste %",k:"mw",f:pct1,mode:"pp",exp:`50%: ${DATA.meta.expected.munch[50]}% · 100%: 15 to 23%`,judge:d=>d<=-5?"good":d<=-2?"warn":"bad"},
+  {m:"Waste $ per store-day",k:"usd",f:usd,mode:"pp",exp:"toward $42 goal",judge:d=>d<=-10?"good":d<0?"warn":"bad"},
+  {m:"Pre-2pm sell-out % donut (pooled)",k:"sod",f:pct2,mode:"pp",exp:`ceiling ${DATA.meta.ceilings.so_d}%`,judge:()=>notStarted?"na":(bD>=2?"bad":pSod.hi>DATA.meta.ceilings.so_d?"warn":"good"),gate:true},
+  {m:"Pre-2pm sell-out % munchkin (pooled)",k:"som",f:pct2,mode:"pp",exp:`ceiling ${DATA.meta.ceilings.so_m}%`,judge:()=>notStarted?"na":(bM>=2?"bad":pSom.hi>DATA.meta.ceilings.so_m?"warn":"good"),gate:true},
+  {m:"Bakery units per store-day",k:"units",f:x=>fmt(x,0),mode:"pct",exp:"no more than 2% below control",judge:d=>d>=-2?"good":d>=-3?"warn":"bad",gate:true},
+  {m:"Beverage units per store-day",k:"bev",f:x=>fmt(x,0),mode:"pct",exp:"not below control",judge:d=>d>=-3?"good":"warn"},
+  {m:"Average ticket",k:"tkt",f:x=>"$"+fmt(x,2),mode:"pct",exp:"within noise",judge:d=>Math.abs(d)<=1.5?"good":"warn"}
+];
+const chipText={good:"on track",warn:"watch",bad:"off",na:"n/a"};
+let html=`<thead><tr><th>Metric</th><th class="test">Test pre (8 wk)</th><th class="test">Test, ${EVAL_LABEL}</th><th class="ctl">Control pre</th><th class="ctl">Control, ${EVAL_LABEL}</th><th>DiD</th><th>Expected / gate</th><th>Status</th></tr></thead><tbody>`;
+rows.forEach(r=>{ const tp=pre("test",r.k), cp=pre("ctl",r.k); const t=EVAL.length?mean(EVAL.map(w=>w.test[r.k])):null, c=EVAL.length?mean(EVAL.map(w=>w.ctl[r.k])):null; const d=EVAL.length?did(r.k,r.mode):null;
+  const st = notStarted?"na":r.judge(d);
+  html+=`<tr><td>${r.gate?"<b>Gate</b> · ":""}${r.m}</td><td>${r.f(tp)}</td><td>${t==null?"–":r.f(t)}</td><td>${r.f(cp)}</td><td>${c==null?"–":r.f(c)}</td><td class="did">${d==null?"–":(r.mode==="pp"?sgn(d,r.k==="usd"?1:r.k.startsWith("so")?2:1,r.k==="usd"?"":" pp"):sgn(d,1,"%"))}</td><td style="text-align:left;color:var(--ink-2)">${r.exp}</td><td><span class="chip ${st}">${chipText[st]}</span></td></tr>`;});
+html+=`</tbody>`; document.getElementById("tbl").innerHTML=html;
+
+/* ---------- data confidence ---------- */
+const fresh = d=>Math.round((new Date(DATA.meta.generated.slice(0,10))-new Date(d))/86400000);
+const conf=[
+  {s:fresh(DATA.meta.freshness.orders)<=3?"good":"warn",b:`Bakery orders current to ${DATA.meta.freshness.orders}`,t:`${fresh(DATA.meta.freshness.orders)} days old. Source: FactBakeryOrderDetail (Fabric Gold), ContactLocationCode key, nulls dropped.`},
+  {s:fresh(DATA.meta.freshness.invoices)<=8?"good":"warn",b:`Invoices current to ${DATA.meta.freshness.invoices}`,t:`Invoices post ~5 days behind orders; ${DATA.meta.provisional_days||0} store-days in the latest week use ordered units as a stand-in until invoices land, then restate.`},
+  {s:fresh(DATA.meta.freshness.pos)<=3?"good":"warn",b:`POS current to ${DATA.meta.freshness.pos}`,t:`Sell-outs, bakery units, beverage and ticket come from silver guest checks; ${DATA.meta.pos_days_missing} store-days dropped this week for a missing feed.`},
+  {s:DATA.meta.tests_reporting===NT&&DATA.meta.ctls_reporting===NC?"good":"bad",b:`${DATA.meta.tests_reporting}/${NT} test and ${DATA.meta.ctls_reporting}/${NC} control stores reporting`,t:"A store with no orders or no POS for the week is dropped from both arms' pooled rates that week."},
+  {s:DATA.meta.cfo_tieout_pct==null?"warn":Math.abs(DATA.meta.cfo_tieout_pct)<=3?"good":"warn",b:DATA.meta.cfo_tieout_pct==null?"Invoiced units not yet tied to CFO file":`Invoiced units tie to CFO file within ${fmt(DATA.meta.cfo_tieout_pct)}%`,t:"Monthly reconciliation of Fabric invoiced units to the CFO Daily_donut_orders file; tolerance ±3%. Set cfo_tieout_pct in pilot_config.json after each check."},
+  {s:cutOK(cutLast)==="na"?"warn":cutOK(cutLast),b:`Test orders ${cutLast==null?"–":sgn(cutLast,1,"%")} vs. pre-period`,t:`The evidence the dial is actually loaded. Expected about ${cutExp==null?"–":cutExp+"%"} at ${dialLabel}. No par file exists, so this replaces order compliance; if the cut is much smaller than expected, managers are adding back.`},
+  {s:Math.abs(drift)<=1.5?"good":"warn",b:`Control orders ${sgn(drift,1,"%")} vs. their pre-period`,t:"Controls should not move. Movement means the pars leaked or the ordering system changed for everyone."}
+];
+document.getElementById("conf").innerHTML = conf.map(c=>`<div class="item"><span class="dot ${c.s}"></span><div><b>${c.b}</b><span>${c.t}</span></div></div>`).join("");
+
+
+</script>
+</body></html>
