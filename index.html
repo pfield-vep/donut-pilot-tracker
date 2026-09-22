@@ -56,8 +56,20 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-
 .card .exp{color:var(--ink-2);font-size:13px}
 .pill{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
 .pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.inl{position:static;top:auto;right:auto}
 .pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.na{background:var(--surface-2);color:var(--ink-2)}
 :root{--na:var(--ink-2)}
+/* freshness banner */
+.stale{border-radius:4px;padding:11px 14px;margin:14px 0 0;font-size:13.5px;display:flex;gap:10px;align-items:flex-start}
+.stale b{display:block;font-size:14px;margin-bottom:2px}
+.stale.warn{background:var(--warn-bg);border:1px solid var(--warn);color:var(--ink)}
+.stale.bad{background:var(--bad-bg);border:1px solid var(--bad);color:var(--ink)}
+.stale .ico{font-weight:700;font-size:15px;line-height:1.3}
+/* sample-size table */
+#mdetbl{font-size:12.5px}
+#mdetbl td:nth-child(2){max-width:250px}
+#mdetbl td.hit{background:var(--good-bg);color:var(--good);font-weight:600}
+#mdetbl td.miss{color:var(--ink-3)}
 /* DiD panel */
 .didp{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:10px}
 .didp .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
@@ -109,6 +121,7 @@ body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
 
 <div id="gate" hidden><form id="gateForm"><h1>Donut Pilot Tracker</h1><p>Enter the access password to view.</p><input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password"><button type="submit">Open</button><div class="err" id="gateErr"></div></form></div>
 <div class="wrap">
+<div id="stale"></div>
 <header>
   <div>
     <h1>Donut Pilot Tracker</h1>
@@ -146,6 +159,10 @@ body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
 
 <h2>Scorecard</h2>
 <div class="tblwrap"><table id="tbl"></table></div>
+
+<h2>How long until each read is conclusive</h2>
+<div class="tblwrap"><table id="mdetbl"></table></div>
+<div class="method" id="mdenote"></div>
 
 <h2>Can I trust this week's numbers?</h2>
 <div class="conf" id="conf"></div>
@@ -650,7 +667,168 @@ const DATA = {
     "drift_m": -6.52
    }
   }
- ]
+ ],
+ "stats": {
+  "ready": true,
+  "k_pre": 8,
+  "k_post": 2,
+  "eval_from": "2026-09-07",
+  "eval_to": "2026-09-14",
+  "n_test": 37,
+  "n_ctl": 19,
+  "metrics": {
+   "dw": {
+    "label": "Donut waste",
+    "unit": "pp",
+    "mode": "effect",
+    "did": -3.677,
+    "se": 1.491,
+    "t": -2.466,
+    "p": 0.01907,
+    "lo": -6.712,
+    "hi": -0.643,
+    "dof": 32.9,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 6.077,
+    "mde_now": 4.178,
+    "mde_at": {
+     "2": 3.799,
+     "4": 2.943,
+     "6": 2.595,
+     "8": 2.403,
+     "12": 2.193,
+     "16": 2.081,
+     "26": 1.943
+    }
+   },
+   "mw": {
+    "label": "Munchkin waste",
+    "unit": "pp",
+    "mode": "effect",
+    "did": -3.494,
+    "se": 1.616,
+    "t": -2.162,
+    "p": 0.03819,
+    "lo": -6.786,
+    "hi": -0.202,
+    "dof": 32.2,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 7.491,
+    "mde_now": 4.528,
+    "mde_at": {
+     "2": 4.682,
+     "4": 3.627,
+     "6": 3.199,
+     "8": 2.961,
+     "12": 2.703,
+     "16": 2.565,
+     "26": 2.395
+    }
+   },
+   "sod": {
+    "label": "Donut AM sell-outs",
+    "unit": "pp",
+    "mode": "guardrail",
+    "did": -0.352,
+    "se": 0.935,
+    "t": -0.376,
+    "p": 0.7099,
+    "lo": -2.275,
+    "hi": 1.572,
+    "dof": 25.5,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 3.959,
+    "mde_now": 2.619,
+    "mde_at": {
+     "2": 2.475,
+     "4": 1.917,
+     "6": 1.691,
+     "8": 1.565,
+     "12": 1.429,
+     "16": 1.356,
+     "26": 1.266
+    }
+   },
+   "som": {
+    "label": "Munchkin AM sell-outs",
+    "unit": "pp",
+    "mode": "guardrail",
+    "did": 1.902,
+    "se": 1.722,
+    "t": 1.105,
+    "p": 0.27744,
+    "lo": -1.604,
+    "hi": 5.408,
+    "dof": 32.4,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 6.095,
+    "mde_now": 4.825,
+    "mde_at": {
+     "2": 3.81,
+     "4": 2.951,
+     "6": 2.603,
+     "8": 2.41,
+     "12": 2.2,
+     "16": 2.087,
+     "26": 1.948
+    }
+   },
+   "units": {
+    "label": "Bakery units/day",
+    "unit": "units",
+    "mode": "guardrail",
+    "did": 26.596,
+    "se": 25.321,
+    "t": 1.05,
+    "p": 0.30246,
+    "lo": -25.253,
+    "hi": 78.445,
+    "dof": 28.2,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 74.783,
+    "mde_now": 70.938,
+    "mde_at": {
+     "2": 46.748,
+     "4": 36.211,
+     "6": 31.935,
+     "8": 29.566,
+     "12": 26.99,
+     "16": 25.605,
+     "26": 23.907
+    }
+   },
+   "usd": {
+    "label": "Waste $/store-day",
+    "unit": "$",
+    "mode": "effect",
+    "did": -7.675,
+    "se": 3.055,
+    "t": -2.513,
+    "p": 0.0164,
+    "lo": -13.861,
+    "hi": -1.489,
+    "dof": 37.6,
+    "n_t": 37,
+    "n_c": 19,
+    "sigma_week": 12.694,
+    "mde_now": 8.558,
+    "mde_at": {
+     "2": 7.935,
+     "4": 6.147,
+     "6": 5.421,
+     "8": 5.019,
+     "12": 4.581,
+     "16": 4.346,
+     "26": 4.058
+    }
+   }
+  }
+ }
 };
 /* ==DATA_END== */
 
@@ -855,19 +1033,45 @@ function didPanel(el, opt){
   W.forEach((w,i)=>{ g+=`<rect class="dhit" data-i="${i}" x="${m.l+i*iw}" y="${m.t}" width="${iw}" height="${Ht-m.t-m.b}" fill="transparent"/>`; });
 
   const favD = didv!=null && opt.goodDir*didv>0;
+  const S = (DATA.stats && DATA.stats.ready && opt.skey && DATA.stats.metrics[opt.skey]) || null;
+  const pfmt = v=>v==null?"–":(v<0.001?"<0.001":v.toFixed(3));
+  let pcol=css('--ink-3'), plab="not significant";
+  if(S && S.p!=null){
+    const sigFav = S.p<0.05 && opt.goodDir*S.did>0, sigBad = S.p<0.05 && opt.goodDir*S.did<0;
+    if(sigFav){ pcol=GOODC; plab="significant"; }
+    else if(sigBad){ pcol=BADC; plab="significant harm"; }
+    else if(S.p<0.10){ pcol=css('--warn'); plab="borderline"; }
+  }
   const tiles = [
     ["Pre avg gap", opt.sfmt(preG), css('--ctl'), PRE.length+" wks"],
     ["Post avg gap", postG==null?"–":opt.sfmt(postG), css('--test'), EVAL.length+" wk"+(EVAL.length===1?"":"s")+", "+EVAL_LABEL],
-    ["DiD = post − pre", didv==null?"–":opt.sfmt(didv), didv==null?css('--ink-3'):(favD?GOODC:BADC), opt.unit]
+    ["DiD = post − pre", didv==null?"–":opt.sfmt(didv), didv==null?css('--ink-3'):(favD?GOODC:BADC), opt.unit],
+    ["p-value", S?pfmt(S.p):"–", pcol, plab]
   ].map(([k,v,c,n])=>`<div class="tile" style="border-left-color:${c}"><div class="tk">${k}</div><div class="tv" style="color:${c}">${v}</div><div class="tn">${n}</div></div>`).join("");
 
   const foot = didv==null ? "No post-period weeks yet, so there is no DiD to read." :
     `Test moved ${opt.sfmt(tCh)} off its own pre-period; control moved ${opt.sfmt(cCh)}. DiD = ${opt.sfmt(tCh)} − ${opt.sfmt(cCh)} = <b>${opt.sfmt(didv)}</b>. ${opt.better} is better, so this is <b>${favD?"the right direction":"the wrong direction"}</b>. Bars are the weekly gap: grey = pre-period baseline, colored = since pars went live.${opt.note?" "+opt.note:""}`;
 
+  let sig = "";
+  if(S && S.p!=null){
+    const sf = opt.statFmt || opt.sfmt;
+    const ci = `${sf(S.lo)} to ${sf(S.hi)}`;
+    const harm = opt.goodDir<0 ? S.hi : S.lo;          // the bad end of the interval
+    const oneIn = S.p>0 ? Math.round(1/S.p) : null;
+    if(S.p<0.05 && opt.goodDir*S.did>0){
+      sig = `<b>Significant (p = ${pfmt(S.p)}).</b> Testing store by store — each of the ${S.n_t+S.n_c} stores contributes one before/after change — the DiD is ${sf(S.did)}, 95% CI ${ci}. Chance alone would produce a gap this size about 1 time in ${oneIn}.`;
+    } else if(S.mode==="guardrail"){
+      sig = `<b>p = ${pfmt(S.p)} — that is NOT proof of safety.</b> The data are still consistent with anything from ${sf(S.lo)} to ${sf(S.hi)}, including harm of ${sf(harm)}${opt.harmBand?` against a tolerance of ${sf(opt.goodDir<0?opt.harmBand:-opt.harmBand)}`:""}. At ${DATA.stats.k_post} post week${DATA.stats.k_post===1?"":"s"} the smallest move this cohort can detect is ${sf(S.mde_now)}. See "How long until each read is conclusive" below.`;
+    } else {
+      sig = `<b>Not yet significant (p = ${pfmt(S.p)}).</b> 95% CI ${ci}. At ${DATA.stats.k_post} post week${DATA.stats.k_post===1?"":"s"} the smallest move this cohort can detect is ${sf(S.mde_now)}, and the observed move is ${sf(S.did)}.`;
+    }
+    sig = `<div class="foot" style="margin-top:4px">${sig}</div>`;
+  }
+
   const div=document.createElement("div"); div.className="didp";
   div.innerHTML=`<div class="dh"><div class="dt">Difference-in-differences · gap = Test − Control</div><div class="tiles">${tiles}</div></div>`
     + `<svg viewBox="0 0 ${Wd} ${Ht}" role="img" aria-label="Difference-in-differences gap bars">${g}</svg>`
-    + `<div class="foot">${foot}</div>`;
+    + `<div class="foot">${foot}</div>` + sig;
   el.appendChild(div);
   div.querySelectorAll(".dhit").forEach(h=>{ h.addEventListener("mousemove",ev=>{ const i=+h.dataset.i, w=W[i];
       tip.innerHTML=`<b>wk ${w.wk}</b> · ${w.phase==="pre"?"pre":w.phase+"% dial"}<br>Test ${opt.tget(w)==null?"–":opt.fmt(opt.tget(w))}<br>Control ${opt.cget(w)==null?"–":opt.fmt(opt.cget(w))}<br>Gap ${gaps[i]==null?"–":opt.sfmt(gaps[i])}`;
@@ -879,12 +1083,24 @@ const rz=(v,d)=>v==null?null:(Math.abs(v)<0.5*Math.pow(10,-d)?0:v);
 const sPP=v=>v==null?"–":sgn(rz(v,1),1," pp"), sPP2=v=>v==null?"–":sgn(rz(v,2),2," pp"), sPTS=v=>v==null?"–":sgn(rz(v,1),1," pts");
 const sUSD=v=>v==null?"–":((rz(v,1)<0?"-$":"+$")+fmt(Math.abs(rz(v,1)),1)), usdAx=v=>(v<0?"-$":"$")+fmt(Math.abs(v),0);
 
-didPanel(document.getElementById("c_dw"),{tget:w=>w.test.dw,cget:w=>w.ctl.dw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
-didPanel(document.getElementById("c_mw"),{tget:w=>w.test.mw,cget:w=>w.ctl.mw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
-didPanel(document.getElementById("c_sod"),{tget:w=>w.test.sod,cget:w=>w.ctl.sod,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
-didPanel(document.getElementById("c_som"),{tget:w=>w.test.som,cget:w=>w.ctl.som,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
-didPanel(document.getElementById("c_units"),{tget:w=>w.test.units/pre("test","units")*100,cget:w=>w.ctl.units/pre("ctl","units")*100,fmt:v=>fmt(v,1),sfmt:sPTS,goodDir:1,unit:"index pts (= %)",better:"Higher"});
-didPanel(document.getElementById("c_usd"),{tget:w=>w.test.usd,cget:w=>w.ctl.usd,fmt:usdAx,sfmt:sUSD,goodDir:-1,unit:"$ per store-day",better:"Lower"});
+didPanel(document.getElementById("c_dw"),{skey:"dw",tget:w=>w.test.dw,cget:w=>w.ctl.dw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
+didPanel(document.getElementById("c_mw"),{skey:"mw",tget:w=>w.test.mw,cget:w=>w.ctl.mw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
+didPanel(document.getElementById("c_sod"),{skey:"sod",harmBand:DATA.meta.ceilings.so_d,tget:w=>w.test.sod,cget:w=>w.ctl.sod,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
+didPanel(document.getElementById("c_som"),{skey:"som",harmBand:DATA.meta.ceilings.so_m,tget:w=>w.test.som,cget:w=>w.ctl.som,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
+didPanel(document.getElementById("c_units"),{skey:"units",harmBand:DATA.meta.ceilings.units_band/100*pre("test","units"),statFmt:v=>sgn(rz(v,0),0," units"),tget:w=>w.test.units/pre("test","units")*100,cget:w=>w.ctl.units/pre("ctl","units")*100,fmt:v=>fmt(v,1),sfmt:sPTS,goodDir:1,unit:"index pts (= %)",better:"Higher"});
+didPanel(document.getElementById("c_usd"),{skey:"usd",tget:w=>w.test.usd,cget:w=>w.ctl.usd,fmt:usdAx,sfmt:sUSD,goodDir:-1,unit:"$ per store-day",better:"Lower"});
+
+/* ---------- freshness banner: a silent pull failure must be loud ---------- */
+(function(){
+  const gen = new Date(DATA.meta.generated.replace(" ","T"));
+  const days = Math.floor((Date.now()-gen.getTime())/86400000);
+  const posLag = Math.floor((Date.now()-new Date(DATA.meta.freshness.pos+"T12:00:00").getTime())/86400000);
+  let cls=null, msg="";
+  if(days>=8){ cls="bad"; msg=`<b>These numbers are ${days} days old.</b> The daily 07:00 pull has not succeeded since ${DATA.meta.generated}. Open <span class="mono">pilot_pull.log</span> in the Pilot Tracker folder — the usual cause is an expired Fabric sign-in, fixed by double-clicking <span class="mono">Run_Pilot_Pull.bat</span> once and signing in. Do not read the DiD or p-values below as current.`; }
+  else if(days>=3){ cls="warn"; msg=`<b>Last successful refresh was ${days} days ago (${DATA.meta.generated}).</b> The daily pull may not be running. If this number keeps growing, double-click <span class="mono">Run_Pilot_Pull.bat</span> and check <span class="mono">pilot_pull.log</span>.`; }
+  else if(posLag>=4){ cls="warn"; msg=`<b>The pull is running but POS data is ${posLag} days behind.</b> Waste and sell-out figures for the latest week are incomplete until it catches up.`; }
+  if(cls){ const el=document.getElementById("stale"); el.className="stale "+cls; el.innerHTML=`<span class="ico">${cls==="bad"?"!":"·"}</span><div>${msg}</div>`; }
+})();
 
 /* ---------- scorecard table ---------- */
 const rows = [
@@ -915,6 +1131,43 @@ const conf=[
   {s:cutOK(cutLast)==="na"?"warn":cutOK(cutLast),b:`Test orders ${cutLast==null?"–":sgn(cutLast,1,"%")} vs. pre-period`,t:`The evidence the dial is actually loaded. Expected about ${cutExp==null?"–":cutExp+"%"} at ${dialLabel}. No par file exists, so this replaces order compliance; if the cut is much smaller than expected, managers are adding back.`},
   {s:Math.abs(drift)<=1.5?"good":"warn",b:`Control orders ${sgn(drift,1,"%")} vs. their pre-period`,t:"Controls should not move. Movement means the pars leaked or the ordering system changed for everyone."}
 ];
+/* ---------- how many weeks do we need ---------- */
+(function(){
+  const S = DATA.stats;
+  const el = document.getElementById("mdetbl"), note = document.getElementById("mdenote");
+  if(!S || !S.ready){ el.parentElement.style.display="none"; note.style.display="none"; return; }
+  const KS = ["2","4","8","12","26"];
+  const preT = k=>pre("test",k);
+  // what each metric has to beat: an expected effect, or a harm tolerance to rule out
+  const targets = {
+    dw:   {t: DATA.meta.expected.donut[100]-preT("dw"), why:`full-dial goal ${pct1(preT("dw"))} → ${DATA.meta.expected.donut[100]}%`, f:v=>fmt(Math.abs(v),1)+" pp"},
+    mw:   {t: 19-preT("mw"), why:`full-dial goal ${pct1(preT("mw"))} → 19%`, f:v=>fmt(Math.abs(v),1)+" pp"},
+    usd:  {t: 42-preT("usd"), why:`goal $42 from ${usd(preT("usd"))}`, f:v=>"$"+fmt(Math.abs(v),1)},
+    sod:  {t: (pSod?DATA.meta.ceilings.so_d-pSod.rate:DATA.meta.ceilings.so_d), why:`headroom to the ${DATA.meta.ceilings.so_d}% ceiling (now ${pSod?fmt(pSod.rate,2)+"%":"–"})`, f:v=>fmt(Math.abs(v),2)+" pp"},
+    som:  {t: (pSom?DATA.meta.ceilings.so_m-pSom.rate:DATA.meta.ceilings.so_m), why:`headroom to the ${DATA.meta.ceilings.so_m}% ceiling (now ${pSom?fmt(pSom.rate,2)+"%":"–"})`, f:v=>fmt(Math.abs(v),2)+" pp"},
+    units:{t: DATA.meta.ceilings.units_band/100*preT("units"), why:`the ${DATA.meta.ceilings.units_band}% sales-harm band`, f:v=>fmt(Math.abs(v),0)+" units"}
+  };
+  let html = `<thead><tr><th>Metric</th><th>What it has to beat</th><th class="num">now (${DATA.stats.k_post} wk${DATA.stats.k_post===1?"":"s"})</th>`
+    + KS.map(k=>`<th class="num">${k} wks</th>`).join("") + `<th>Verdict</th></tr></thead><tbody>`;
+  Object.keys(S.metrics).forEach(k=>{
+    const m=S.metrics[k], tg=targets[k]; if(!tg) return;
+    const need=Math.abs(tg.t);
+    const cells = KS.map(K=>{ const v=m.mde_at[K]; if(v==null) return `<td class="num">–</td>`;
+      return `<td class="num ${v<=need?"hit":"miss"}">${tg.f(v)}</td>`; }).join("");
+    const floorV = m.mde_at["26"];
+    const verdict = m.p!=null && m.p<0.05 ? `<span class="pill inl good">already proven</span>`
+      : (floorV!=null && floorV<=need ? `<span class="pill inl warn">needs ${KS.find(K=>m.mde_at[K]<=need)||"26+"} post weeks</span>`
+      : `<span class="pill inl bad">not at ${S.n_test}/${S.n_ctl} stores</span>`);
+    html += `<tr><td>${m.label}</td><td>${tg.why}<br><span style="color:var(--ink-3)">target ${tg.f(need)}</span></td>`
+      + `<td class="num">${tg.f(m.mde_now)}</td>${cells}<td>${verdict}</td></tr>`;
+  });
+  el.innerHTML = html + `</tbody>`;
+  note.innerHTML = `<b>How to read this.</b> Each cell is the smallest true difference this pilot could detect with 80% power at the 5% level, given how much a single store bounces around week to week (measured on the ${S.k_pre}-week pre-period: donut waste swings ±${fmt(S.metrics.dw?S.metrics.dw.sigma_week:0,1)} pp per store-week). Green means the effect we are looking for is bigger than the noise, so the test can see it. `
+    + `The numbers stop improving after roughly 8 post weeks because the <b>${S.k_pre}-week pre-period is the binding constraint</b> — a longer post-period cannot fix a short baseline. `
+    + `The two sell-out rows are the hard case: their ceilings are absolute levels, so the weekly DiD can only catch a rise large enough to close the remaining headroom, and it cannot. Those two guardrails are policed by the pooled rate and its 95% CI on the charts above, not by the DiD. `
+    + `Testing is store-level: each of the ${S.n_test+S.n_ctl} stores contributes one before/after change, then the two arms are compared with a Welch t-test. Running the same test on ${(S.n_test+S.n_ctl)} × 7 × weeks store-days would pretend days inside one store are independent and report a p-value several times too small.`;
+})();
+
 document.getElementById("conf").innerHTML = conf.map(c=>`<div class="item"><span class="dot ${c.s}"></span><div><b>${c.b}</b><span>${c.t}</span></div></div>`).join("");
 
 
