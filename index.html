@@ -264,7 +264,23 @@ const DATA = {
     "donut": 0.386,
     "munchkin": 0.107
    }
-  }
+  },
+  "eval_weeks": [
+   "2026-09-07",
+   "2026-09-14"
+  ],
+  "eval_label": "50% dial",
+  "inprogress_week": null,
+  "pre_weeks_used": [
+   "2026-07-13",
+   "2026-07-20",
+   "2026-07-27",
+   "2026-08-03",
+   "2026-08-10",
+   "2026-08-17",
+   "2026-08-24",
+   "2026-08-31"
+  ]
  },
  "weeks": [
   {
@@ -666,54 +682,14 @@ const DATA = {
     "drift_d": -5.48,
     "drift_m": -6.52
    }
-  },
-  {
-   "wk": "2026-09-21",
-   "phase": "100",
-   "test": {
-    "dw": 26.078,
-    "mw": 36.144,
-    "sod": 0.0,
-    "som": 2.703,
-    "units": 580.757,
-    "bev": 438.108,
-    "tkt": 8.557,
-    "usd": 52.651,
-    "otherbak": 38.892,
-    "override": 3.415,
-    "stores": 37,
-    "store_days": 37,
-    "days": 1.0,
-    "cut": -21.28,
-    "cut_d": -20.19,
-    "cut_m": -21.89
-   },
-   "ctl": {
-    "dw": 27.242,
-    "mw": 32.723,
-    "sod": 0.0,
-    "som": 0.0,
-    "units": 677.368,
-    "bev": 472.947,
-    "tkt": 8.681,
-    "usd": 60.369,
-    "otherbak": 40.474,
-    "override": 1.627,
-    "stores": 19,
-    "store_days": 19,
-    "days": 1.0,
-    "drift": -19.31,
-    "drift_d": -14.96,
-    "drift_m": -21.79
-   }
   }
  ],
  "stats": {
   "ready": true,
   "k_pre": 8,
-  "k_post": 1,
-  "eval_from": "2026-09-21",
-  "eval_to": "2026-09-21",
+  "k_post": 2,
+  "eval_from": "2026-09-07",
+  "eval_to": "2026-09-14",
   "n_test": 37,
   "n_ctl": 19,
   "metrics": {
@@ -721,17 +697,17 @@ const DATA = {
     "label": "Donut waste",
     "unit": "pp",
     "mode": "effect",
-    "did": -5.1,
-    "se": 3.672,
-    "t": -1.389,
-    "p": 0.1717,
-    "lo": -12.494,
-    "hi": 2.295,
-    "dof": 45.4,
+    "did": -3.677,
+    "se": 1.491,
+    "t": -2.466,
+    "p": 0.01907,
+    "lo": -6.712,
+    "hi": -0.643,
+    "dof": 32.9,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 6.077,
-    "mde_now": 10.288,
+    "mde_now": 4.178,
     "mde_at": {
      "2": 3.799,
      "4": 2.943,
@@ -746,17 +722,17 @@ const DATA = {
     "label": "Munchkin waste",
     "unit": "pp",
     "mode": "effect",
-    "did": -4.84,
-    "se": 3.355,
-    "t": -1.443,
-    "p": 0.15721,
-    "lo": -11.628,
-    "hi": 1.949,
-    "dof": 38.5,
+    "did": -3.494,
+    "se": 1.616,
+    "t": -2.162,
+    "p": 0.03819,
+    "lo": -6.786,
+    "hi": -0.202,
+    "dof": 32.2,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 7.491,
-    "mde_now": 9.399,
+    "mde_now": 4.528,
     "mde_at": {
      "2": 4.682,
      "4": 3.627,
@@ -771,17 +747,17 @@ const DATA = {
     "label": "Donut AM sell-outs",
     "unit": "pp",
     "mode": "guardrail",
-    "did": 0.02,
-    "se": 0.464,
-    "t": 0.044,
-    "p": 0.96532,
-    "lo": -0.924,
-    "hi": 0.965,
-    "dof": 32.2,
+    "did": -0.352,
+    "se": 0.935,
+    "t": -0.376,
+    "p": 0.7099,
+    "lo": -2.275,
+    "hi": 1.572,
+    "dof": 25.5,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 3.959,
-    "mde_now": 1.299,
+    "mde_now": 2.619,
     "mde_at": {
      "2": 2.475,
      "4": 1.917,
@@ -796,17 +772,17 @@ const DATA = {
     "label": "Munchkin AM sell-outs",
     "unit": "pp",
     "mode": "guardrail",
-    "did": 4.288,
-    "se": 2.845,
-    "t": 1.507,
-    "p": 0.13912,
-    "lo": -1.45,
-    "hi": 10.025,
-    "dof": 43.2,
+    "did": 1.902,
+    "se": 1.722,
+    "t": 1.105,
+    "p": 0.27744,
+    "lo": -1.604,
+    "hi": 5.408,
+    "dof": 32.4,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 6.095,
-    "mde_now": 7.972,
+    "mde_now": 4.825,
     "mde_at": {
      "2": 3.81,
      "4": 2.951,
@@ -821,17 +797,17 @@ const DATA = {
     "label": "Bakery units/day",
     "unit": "units",
     "mode": "guardrail",
-    "did": 54.996,
-    "se": 34.4,
-    "t": 1.599,
-    "p": 0.12044,
-    "lo": -15.279,
-    "hi": 125.271,
-    "dof": 29.8,
+    "did": 26.596,
+    "se": 25.321,
+    "t": 1.05,
+    "p": 0.30246,
+    "lo": -25.253,
+    "hi": 78.445,
+    "dof": 28.2,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 74.783,
-    "mde_now": 96.375,
+    "mde_now": 70.938,
     "mde_at": {
      "2": 46.748,
      "4": 36.211,
@@ -846,17 +822,17 @@ const DATA = {
     "label": "Waste $/store-day",
     "unit": "$",
     "mode": "effect",
-    "did": -13.407,
-    "se": 7.785,
-    "t": -1.722,
-    "p": 0.09303,
-    "lo": -29.157,
-    "hi": 2.344,
-    "dof": 38.6,
+    "did": -7.675,
+    "se": 3.055,
+    "t": -2.513,
+    "p": 0.0164,
+    "lo": -13.861,
+    "hi": -1.489,
+    "dof": 37.6,
     "n_t": 37,
     "n_c": 19,
     "sigma_week": 12.694,
-    "mde_now": 21.809,
+    "mde_now": 8.558,
     "mde_at": {
      "2": 7.935,
      "4": 6.147,
@@ -873,8 +849,16 @@ const DATA = {
 /* ==DATA_END== */
 
 const NT = DATA.meta.n_test||37, NC = DATA.meta.n_ctl||19;
-const W = DATA.weeks, PRE = W.filter(w=>w.phase==="pre"), POST = W.filter(w=>w.phase!=="pre"), FULL = W.filter(w=>w.phase==="100");
-const EVAL = FULL.length ? FULL : POST, EVAL_LABEL = FULL.length ? "full dial" : "50% dial", EVAL_PHASE = FULL.length ? "100" : "50";
+const W = DATA.weeks;
+/* a trailing week that is still filling up must never become the whole post-period */
+const INPROG = DATA.meta.inprogress_week || (function(){ const l=W[W.length-1]; return (l && l.test && l.test.days!=null && l.test.days<5) ? l.wk : null; })();
+const USABLE = W.filter(w=>w.wk!==INPROG);
+const PRE = USABLE.filter(w=>w.phase==="pre"), POST = USABLE.filter(w=>w.phase!=="pre"), FULL = USABLE.filter(w=>w.phase==="100");
+const EVAL = (DATA.meta.eval_weeks && DATA.meta.eval_weeks.length)
+               ? W.filter(w=>DATA.meta.eval_weeks.indexOf(w.wk)>=0)
+               : (FULL.length ? FULL : POST);
+const EVAL_LABEL = DATA.meta.eval_label || (FULL.length ? "full dial" : "50% dial");
+const EVAL_PHASE = FULL.length ? "100" : "50";
 const last = W[W.length-1];
 const mean = a=>a.reduce((s,x)=>s+x,0)/a.length;
 const pre = (arm,k)=>mean(PRE.map(w=>w[arm][k]));
@@ -978,7 +962,7 @@ function lineChart(el, opt){
     const e=pts[pts.length-1]; g+=`<text x="${e[0]-8}" y="${e[1]+(s.labelDy||-8)}" text-anchor="end" font-size="11" font-weight="600" fill="var(--ink)" font-family="IBM Plex Mono,monospace">${opt.fmt(e[2])}</text>`;
   });
   // x labels (every other week)
-  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="10" fill="var(--ink-2)">${w.wk.slice(5).replace('-','/')}${w.test&&w.test.days&&w.test.days<6.5?"*":""}</text>`; });
+  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="10" fill="${w.wk===INPROG?"var(--ink-3)":"var(--ink-2)"}">${w.wk.slice(5).replace('-','/')}${w.wk===INPROG?"\u2020":(w.test&&w.test.days&&w.test.days<6.5?"*":"")}</text>`; });
   g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${Ht-m.b}" y2="${Ht-m.b}" stroke="var(--line)"/>`;
   // hover targets
   W.forEach((w,i)=>{ g+=`<rect class="hit" data-i="${i}" x="${x(i)-(x(1)-x(0))/2}" y="${m.t}" width="${x(1)-x(0)}" height="${Ht-m.t-m.b}" fill="transparent"/>`; });
@@ -999,12 +983,12 @@ lineChart(document.getElementById("c_mw"),{title:"Munchkin implied waste, % of i
 lineChart(document.getElementById("c_sod"),{title:"Donut sell-outs before 2pm, % of store-days",right:"weekly rate; band = pooled 95% CI",fmt:pct2,zero:true,
   series:[{label:"Test",color:T,get:w=>w.test.sod},{label:"Control",color:C,get:w=>w.ctl.sod,labelDy:14}],
   lines:[{y:DATA.meta.ceilings.so_d,color:BAD,label:"ceiling "+DATA.meta.ceilings.so_d+"%"}],
-  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const sub=POST.slice(0,POST.indexOf(w)+1); const p=pooled("sod","test",sub); return [p.lo,p.hi]; }}],
+  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const j=POST.indexOf(w); if(j<0) return null; const p=pooled("sod","test",POST.slice(0,j+1)); return p?[p.lo,p.hi]:null; }}],
   foot:"One sell-out in a week at one store is 14% for that store; only the pooled band means anything. Two consecutive weekly rates over the ceiling = add back one dozen on the offending weekday pars."});
 lineChart(document.getElementById("c_som"),{title:"Munchkin sell-outs before 2pm, % of store-days",right:"weekly rate; band = pooled 95% CI",fmt:pct2,zero:true,
   series:[{label:"Test",color:T,get:w=>w.test.som},{label:"Control",color:C,get:w=>w.ctl.som,labelDy:14}],
   lines:[{y:DATA.meta.ceilings.so_m,color:BAD,label:"ceiling "+DATA.meta.ceilings.so_m+"%"}],
-  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const sub=POST.slice(0,POST.indexOf(w)+1); const p=pooled("som","test",sub); return [p.lo,p.hi]; }}]});
+  bands:[{color:css('--test-soft'),get:(w,i)=>{ if(w.phase==="pre") return null; const j=POST.indexOf(w); if(j<0) return null; const p=pooled("som","test",POST.slice(0,j+1)); return p?[p.lo,p.hi]:null; }}]});
 lineChart(document.getElementById("c_units"),{title:"Bakery units per store-day, indexed to pre-period = 100",right:"the sales-protection gate",fmt:x=>fmt(x,1),
   series:[{label:"Test",color:T,get:w=>w.test.units/pre("test","units")*100},{label:"Control",color:C,get:w=>w.ctl.units/pre("ctl","units")*100,labelDy:14}],
   lines:[{y:98,color:WARN,label:"−2% band",dash:"3 3"},{y:102,color:WARN,label:"+2% band",dash:"3 3"}],
@@ -1069,7 +1053,7 @@ function didPanel(el, opt){
   };
   g+=avgLine(preG, m.l, preR, css('--ctl'), "pre avg", "start");
   if(postG!=null && ei>=0) g+=avgLine(postG, m.l+ei*iw, Wd-m.r, css('--test'), "post avg", "end");
-  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="9.5" fill="var(--ink-2)">${w.wk.slice(5).replace('-','/')}${w.test&&w.test.days&&w.test.days<6.5?"*":""}</text>`; });
+  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="9.5" fill="${w.wk===INPROG?"var(--ink-3)":"var(--ink-2)"}">${w.wk.slice(5).replace('-','/')}${w.wk===INPROG?"\u2020":(w.test&&w.test.days&&w.test.days<6.5?"*":"")}</text>`; });
   W.forEach((w,i)=>{ g+=`<rect class="dhit" data-i="${i}" x="${m.l+i*iw}" y="${m.t}" width="${iw}" height="${Ht-m.t-m.b}" fill="transparent"/>`; });
 
   const favD = didv!=null && opt.goodDir*didv>0;
@@ -1139,6 +1123,8 @@ didPanel(document.getElementById("c_usd"),{skey:"usd",tget:w=>w.test.usd,cget:w=
   if(days>=8){ cls="bad"; msg=`<b>These numbers are ${days} days old.</b> The daily 07:00 pull has not succeeded since ${DATA.meta.generated}. Open <span class="mono">pilot_pull.log</span> in the Pilot Tracker folder — the usual cause is an expired Fabric sign-in, fixed by double-clicking <span class="mono">Run_Pilot_Pull.bat</span> once and signing in. Do not read the DiD or p-values below as current.`; }
   else if(days>=3){ cls="warn"; msg=`<b>Last successful refresh was ${days} days ago (${DATA.meta.generated}).</b> The daily pull may not be running. If this number keeps growing, double-click <span class="mono">Run_Pilot_Pull.bat</span> and check <span class="mono">pilot_pull.log</span>.`; }
   else if(posLag>=4){ cls="warn"; msg=`<b>The pull is running but POS data is ${posLag} days behind.</b> Waste and sell-out figures for the latest week are incomplete until it catches up.`; }
+  if(!cls && INPROG){ const w=W[W.length-1];
+    cls="warn"; msg=`<b>The week of ${INPROG} is still filling up (${w.test&&w.test.days!=null?w.test.days:"<1"} day so far) and is marked † on the charts.</b> It is plotted but deliberately left out of every average, DiD and p-value below, which cover the ${EVAL.length} complete week${EVAL.length===1?"":"s"} of ${EVAL_LABEL}. Judge nothing off that last point.`; }
   if(cls){ const el=document.getElementById("stale"); el.className="stale "+cls; el.innerHTML=`<span class="ico">${cls==="bad"?"!":"·"}</span><div>${msg}</div>`; }
 })();
 
