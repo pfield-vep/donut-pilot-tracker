@@ -58,6 +58,15 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-
 .pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
 .pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.na{background:var(--surface-2);color:var(--ink-2)}
 :root{--na:var(--ink-2)}
+/* DiD panel */
+.didp{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:10px}
+.didp .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.didp .dt{font-weight:600;font-size:13px;padding-top:2px}
+.didp .tiles{display:flex;gap:6px;flex-wrap:wrap}
+.didp .tile{border-left:3px solid var(--line);padding:1px 8px;min-width:78px}
+.didp .tile .tk{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.didp .tile .tv{font-size:17px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",ui-monospace,monospace}
+.didp .tile .tn{font-size:9px;color:var(--ink-3)}
 /* charts */
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px}
 @media (max-width:480px){.grid2{grid-template-columns:1fr}}
@@ -786,6 +795,96 @@ lineChart(document.getElementById("c_usd"),{title:"Waste $ per store-day (bakery
   series:[{label:"Test",color:T,get:w=>w.test.usd},{label:"Control",color:C,get:w=>w.ctl.usd,labelDy:-8}],
   lines:[{y:42,color:GOOD,label:"program goal $42"}],
   foot:`Test pre ${usd(pre("test","usd"))} → now ${usd(last.test.usd)}; DiD ${notStarted?"–":sgn(dUsd,1)}/store-day ≈ ${notStarted?"–":sgn(dUsd*37*365/1000,0,"k")}/yr across 37 stores before the AM run-out cost.`});
+
+
+/* ---------- DiD gap-bar panel (gap = Test − Control, by week) ---------- */
+function didPanel(el, opt){
+  const Wd=560, Ht=172, m={l:50,r:14,t:16,b:26};
+  const gap = w=>{ const t=opt.tget(w), c=opt.cget(w); return (t==null||c==null)?null:t-c; };
+  const gaps = W.map(gap);
+  const preG  = mean(PRE.map(gap));
+  const postG = EVAL.length ? mean(EVAL.map(gap)) : null;
+  const didv  = postG==null ? null : postG - preG;
+  const tCh   = EVAL.length ? mean(EVAL.map(opt.tget)) - mean(PRE.map(opt.tget)) : null;
+  const cCh   = EVAL.length ? mean(EVAL.map(opt.cget)) - mean(PRE.map(opt.cget)) : null;
+
+  let vals = gaps.filter(v=>v!=null).concat([0, preG]); if(postG!=null) vals.push(postG);
+  let lo=Math.min(...vals), hi=Math.max(...vals); const pad=((hi-lo)||1)*0.22; lo-=pad; hi+=pad;
+  const rawStep=(hi-lo)/4, mag=Math.pow(10,Math.floor(Math.log10(rawStep))), step=[1,2,2.5,5,10].map(k=>k*mag).find(k=>k>=rawStep);
+  lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
+  const tv=[]; for(let t=lo;t<=hi+1e-9;t+=step) tv.push(+t.toFixed(6));
+  const iw=(Wd-m.l-m.r)/W.length;
+  const x=i=>m.l+(i+0.5)*iw, y=v=>m.t+(1-(v-lo)/(hi-lo))*(Ht-m.t-m.b);
+  const bw=Math.min(iw*0.62, 24), y0=y(0);
+  const GOODC=css('--good'), BADC=css('--bad');
+  const firstPost=W.findIndex(w=>w.phase!=="pre");
+  const evalSet=new Set(EVAL.map(w=>w.wk));
+  const ei=W.findIndex(w=>evalSet.has(w.wk));
+
+  let g="";
+  const preR = firstPost<0 ? Wd-m.r : m.l+firstPost*iw;
+  g+=`<rect x="${m.l}" y="${m.t}" width="${preR-m.l}" height="${Ht-m.t-m.b}" fill="var(--pre-band)"/>`;
+  g+=`<text x="${(m.l+preR)/2}" y="${m.t+11}" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">PRE</text>`;
+  if(ei>=0){
+    g+=`<rect x="${m.l+ei*iw}" y="${m.t}" width="${(W.length-ei)*iw}" height="${Ht-m.t-m.b}" fill="var(--dial100)"/>`;
+    g+=`<text x="${m.l+ei*iw+(W.length-ei)*iw/2}" y="${m.t+11}" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">POST</text>`;
+  }
+  tv.forEach(t=>{ g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line-soft)"/><text x="${m.l-6}" y="${y(t)+3.5}" text-anchor="end" font-size="10" fill="var(--ink-2)" font-family="IBM Plex Mono,monospace">${opt.fmt(t)}</text>`; });
+  W.forEach((w,i)=>{ const v=gaps[i]; if(v==null) return;
+    const isPost=evalSet.has(w.wk);
+    const col = isPost ? (opt.goodDir*v>0?GOODC:BADC) : css('--ink-3');
+    const top=Math.min(y(v),y0), h=Math.abs(y(v)-y0);
+    g+=`<rect x="${x(i)-bw/2}" y="${top}" width="${bw}" height="${Math.max(h,0.8)}" fill="${col}" opacity="${isPost?1:0.45}" rx="1"/>`;
+  });
+  g+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${y0}" y2="${y0}" stroke="var(--ink-2)" stroke-width="1.2"/>`;
+  if(firstPost>0){ const px=m.l+firstPost*iw;
+    g+=`<line x1="${px}" x2="${px}" y1="${m.t}" y2="${Ht-m.b}" stroke="${BADC}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+    g+=`<text x="${px+4}" y="${m.t+22}" font-size="9.5" fill="${BADC}" font-weight="600">pars live</text>`;
+  }
+  const avgLine=(val,x1,x2,col,lab,align)=>{
+    const txt=lab+" "+opt.sfmt(val), tw=txt.length*5.9+8;
+    const ty=Math.min(Math.max(y(val)-6, m.t+24), Ht-m.b-4);
+    const tx=align==="end" ? Math.max(x1+2, x2-5-tw) : x1+5;
+    return `<line x1="${x1}" x2="${x2}" y1="${y(val)}" y2="${y(val)}" stroke="${col}" stroke-width="2"/>`
+      +`<rect x="${tx}" y="${ty-10}" width="${tw}" height="13" fill="var(--surface)" opacity=".9" rx="2"/>`
+      +`<text x="${tx+4}" y="${ty}" font-size="10" font-weight="600" fill="${col}" font-family="IBM Plex Mono,monospace">${txt}</text>`;
+  };
+  g+=avgLine(preG, m.l, preR, css('--ctl'), "pre avg", "start");
+  if(postG!=null && ei>=0) g+=avgLine(postG, m.l+ei*iw, Wd-m.r, css('--test'), "post avg", "end");
+  W.forEach((w,i)=>{ if(i%2===0||i===W.length-1) g+=`<text x="${x(i)}" y="${Ht-8}" text-anchor="middle" font-size="9.5" fill="var(--ink-2)">${w.wk.slice(5).replace('-','/')}${w.test&&w.test.days&&w.test.days<6.5?"*":""}</text>`; });
+  W.forEach((w,i)=>{ g+=`<rect class="dhit" data-i="${i}" x="${m.l+i*iw}" y="${m.t}" width="${iw}" height="${Ht-m.t-m.b}" fill="transparent"/>`; });
+
+  const favD = didv!=null && opt.goodDir*didv>0;
+  const tiles = [
+    ["Pre avg gap", opt.sfmt(preG), css('--ctl'), PRE.length+" wks"],
+    ["Post avg gap", postG==null?"–":opt.sfmt(postG), css('--test'), EVAL.length+" wk"+(EVAL.length===1?"":"s")+", "+EVAL_LABEL],
+    ["DiD = post − pre", didv==null?"–":opt.sfmt(didv), didv==null?css('--ink-3'):(favD?GOODC:BADC), opt.unit]
+  ].map(([k,v,c,n])=>`<div class="tile" style="border-left-color:${c}"><div class="tk">${k}</div><div class="tv" style="color:${c}">${v}</div><div class="tn">${n}</div></div>`).join("");
+
+  const foot = didv==null ? "No post-period weeks yet, so there is no DiD to read." :
+    `Test moved ${opt.sfmt(tCh)} off its own pre-period; control moved ${opt.sfmt(cCh)}. DiD = ${opt.sfmt(tCh)} − ${opt.sfmt(cCh)} = <b>${opt.sfmt(didv)}</b>. ${opt.better} is better, so this is <b>${favD?"the right direction":"the wrong direction"}</b>. Bars are the weekly gap: grey = pre-period baseline, colored = since pars went live.${opt.note?" "+opt.note:""}`;
+
+  const div=document.createElement("div"); div.className="didp";
+  div.innerHTML=`<div class="dh"><div class="dt">Difference-in-differences · gap = Test − Control</div><div class="tiles">${tiles}</div></div>`
+    + `<svg viewBox="0 0 ${Wd} ${Ht}" role="img" aria-label="Difference-in-differences gap bars">${g}</svg>`
+    + `<div class="foot">${foot}</div>`;
+  el.appendChild(div);
+  div.querySelectorAll(".dhit").forEach(h=>{ h.addEventListener("mousemove",ev=>{ const i=+h.dataset.i, w=W[i];
+      tip.innerHTML=`<b>wk ${w.wk}</b> · ${w.phase==="pre"?"pre":w.phase+"% dial"}<br>Test ${opt.tget(w)==null?"–":opt.fmt(opt.tget(w))}<br>Control ${opt.cget(w)==null?"–":opt.fmt(opt.cget(w))}<br>Gap ${gaps[i]==null?"–":opt.sfmt(gaps[i])}`;
+      tip.style.opacity=1; tip.style.left=(ev.clientX+12)+"px"; tip.style.top=(ev.clientY-10)+"px"; });
+    h.addEventListener("mouseleave",()=>tip.style.opacity=0); });
+}
+
+const rz=(v,d)=>v==null?null:(Math.abs(v)<0.5*Math.pow(10,-d)?0:v);
+const sPP=v=>v==null?"–":sgn(rz(v,1),1," pp"), sPP2=v=>v==null?"–":sgn(rz(v,2),2," pp"), sPTS=v=>v==null?"–":sgn(rz(v,1),1," pts");
+const sUSD=v=>v==null?"–":((rz(v,1)<0?"-$":"+$")+fmt(Math.abs(rz(v,1)),1)), usdAx=v=>(v<0?"-$":"$")+fmt(Math.abs(v),0);
+
+didPanel(document.getElementById("c_dw"),{tget:w=>w.test.dw,cget:w=>w.ctl.dw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
+didPanel(document.getElementById("c_mw"),{tget:w=>w.test.mw,cget:w=>w.ctl.mw,fmt:pct1,sfmt:sPP,goodDir:-1,unit:"pp of invoiced",better:"Lower"});
+didPanel(document.getElementById("c_sod"),{tget:w=>w.test.sod,cget:w=>w.ctl.sod,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
+didPanel(document.getElementById("c_som"),{tget:w=>w.test.som,cget:w=>w.ctl.som,fmt:pct2,sfmt:sPP2,goodDir:-1,unit:"pp of store-days",better:"Lower",note:"At 133-259 store-days a week, one sell-out moves the gap ~0.4 pp, so read the pooled CI above, not these bars."});
+didPanel(document.getElementById("c_units"),{tget:w=>w.test.units/pre("test","units")*100,cget:w=>w.ctl.units/pre("ctl","units")*100,fmt:v=>fmt(v,1),sfmt:sPTS,goodDir:1,unit:"index pts (= %)",better:"Higher"});
+didPanel(document.getElementById("c_usd"),{tget:w=>w.test.usd,cget:w=>w.ctl.usd,fmt:usdAx,sfmt:sUSD,goodDir:-1,unit:"$ per store-day",better:"Lower"});
 
 /* ---------- scorecard table ---------- */
 const rows = [
