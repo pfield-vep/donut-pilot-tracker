@@ -213,15 +213,15 @@ body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
 const DATA = {
  "meta": {
   "sample": false,
-  "generated": "2026-09-22 11:24",
+  "generated": "2026-09-25 16:54",
   "pilot_start": "2026-09-08",
   "full_dial_start": "2026-09-22",
   "pre_start": "2026-07-13",
   "start_note": "Pars went live Tuesday 9/8; the week of 9/7 counts 9/8 to 9/13 only (Labor Day Monday excluded from both arms).",
   "freshness": {
-   "orders": "2026-09-22",
-   "invoices": "2026-09-22",
-   "pos": "2026-09-21"
+   "orders": "2026-09-25",
+   "invoices": "2026-09-25",
+   "pos": "2026-09-24"
   },
   "n_test": 37,
   "n_ctl": 19,
@@ -230,6 +230,22 @@ const DATA = {
   "cfo_tieout_pct": null,
   "pos_days_missing": 56,
   "provisional_days": 0,
+  "eval_weeks": [
+   "2026-09-07",
+   "2026-09-14"
+  ],
+  "eval_label": "50% dial",
+  "inprogress_week": "2026-09-21",
+  "pre_weeks_used": [
+   "2026-07-13",
+   "2026-07-20",
+   "2026-07-27",
+   "2026-08-03",
+   "2026-08-10",
+   "2026-08-17",
+   "2026-08-24",
+   "2026-08-31"
+  ],
   "ceilings": {
    "so_d": 2.5,
    "so_m": 4.6,
@@ -264,23 +280,7 @@ const DATA = {
     "donut": 0.386,
     "munchkin": 0.107
    }
-  },
-  "eval_weeks": [
-   "2026-09-07",
-   "2026-09-14"
-  ],
-  "eval_label": "50% dial",
-  "inprogress_week": null,
-  "pre_weeks_used": [
-   "2026-07-13",
-   "2026-07-20",
-   "2026-07-27",
-   "2026-08-03",
-   "2026-08-10",
-   "2026-08-17",
-   "2026-08-24",
-   "2026-08-31"
-  ]
+  }
  },
  "weeks": [
   {
@@ -681,6 +681,46 @@ const DATA = {
     "drift": -6.15,
     "drift_d": -5.48,
     "drift_m": -6.52
+   }
+  },
+  {
+   "wk": "2026-09-21",
+   "phase": "100",
+   "test": {
+    "dw": 13.751,
+    "mw": 26.491,
+    "sod": 1.802,
+    "som": 1.802,
+    "units": 732.55,
+    "bev": 480.081,
+    "tkt": 8.734,
+    "usd": 40.064,
+    "otherbak": 45.099,
+    "override": 1.943,
+    "stores": 37,
+    "store_days": 111,
+    "days": 3.0,
+    "cut": -14.06,
+    "cut_d": -15.47,
+    "cut_m": -13.27
+   },
+   "ctl": {
+    "dw": 14.796,
+    "mw": 20.159,
+    "sod": 3.509,
+    "som": 0.0,
+    "units": 846.789,
+    "bev": 520.912,
+    "tkt": 8.71,
+    "usd": 36.412,
+    "otherbak": 47.842,
+    "override": 0.041,
+    "stores": 19,
+    "store_days": 57,
+    "days": 3.0,
+    "drift": -14.42,
+    "drift_d": -15.15,
+    "drift_m": -14.01
    }
   }
  ],
