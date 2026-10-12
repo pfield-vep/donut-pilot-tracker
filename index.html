@@ -117,6 +117,30 @@ tr:last-child td{border-bottom:0}
 #gate button{margin-top:10px;width:100%;font:inherit;font-weight:600;padding:10px;border:0;border-radius:4px;background:var(--test);color:#fff;cursor:pointer}
 #gate .err{color:var(--bad);font-size:12.5px;min-height:16px;margin-top:8px}
 body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
+
+/* sub-cohort takeaways + cuts (cohort_cuts.py) */
+#takeTbl{min-width:860px}
+#takeTbl th,#takeTbl td{text-align:left;white-space:normal;vertical-align:top;padding:8px 11px}
+#takeTbl td:first-child,#takeTbl th:first-child{min-width:140px;font-weight:600}
+#takeTbl td:nth-child(2){font-weight:600;min-width:230px}
+#takeTbl td:nth-child(3){color:var(--ink-2);min-width:260px}
+#takeTbl td:nth-child(4){white-space:nowrap}
+.ct-note{font-size:12.5px;color:var(--ink-2);margin-top:8px;max-width:110ch}
+.ct-note.warn{color:var(--warn);font-weight:600}
+#cutsTbl{min-width:1040px;font-size:12px}
+#cutsTbl th,#cutsTbl td{padding:6px 6px;vertical-align:middle}
+#cutsTbl td:first-child,#cutsTbl th:first-child{min-width:150px}
+#cutsTbl td:first-child .ct-n{display:block;margin-left:0}
+#cutsTbl tr.ct-grp td{background:var(--surface-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);font-weight:600;text-align:left;padding:6px 10px}
+#cutsTbl tr.ct-all td{font-weight:600;border-bottom:2px solid var(--line)}
+#cutsTbl .ct-n{color:var(--ink-3);font-size:11px;font-weight:400;margin-left:6px}
+#cutsTbl .ct-p{display:block;color:var(--ink-3);font-size:10.5px;font-weight:400}
+#cutsTbl .ct-p.sig{color:var(--good);font-weight:600}
+#cutsTbl td.ct-ci{padding-left:0;cursor:default}
+#cutsTbl td.ct-ci svg{display:block}
+#cutsTbl .ct-over{color:var(--bad);font-weight:600}
+#cutsTbl .ct-soft{color:var(--warn);font-weight:600}
+#cutsTbl th .ct-p{text-transform:none;letter-spacing:0}
 </style>
 
 <div id="gate" hidden><form id="gateForm"><h1>Donut Pilot Tracker</h1><p>Enter the access password to view.</p><input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password"><button type="submit">Open</button><div class="err" id="gateErr"></div></form></div>
@@ -132,6 +156,10 @@ body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
     <div class="legend"><span><span class="sw test"></span>Test (37)</span><span><span class="sw ctl"></span>Control (19)</span><span id="asof"></span></div>
   </div>
 </header>
+
+<h2>Sub-cohort takeaways</h2>
+<div class="tblwrap"><table id="takeTbl"></table></div>
+<div class="ct-note" id="takeNote"></div>
 
 <h2>Pilot status</h2>
 <div class="strip" id="strip"></div>
@@ -156,6 +184,10 @@ body.locked .wrap{filter:blur(6px);pointer-events:none;user-select:none}
   <div class="chart" id="c_units"></div>
   <div class="chart" id="c_usd"></div>
 </div>
+
+<h2>Sub-cohort cuts (each test store vs. its own matched control)</h2>
+<div class="tblwrap" id="cutsWrap"><table id="cutsTbl"></table></div>
+<div class="ct-note" id="cutsNote"></div>
 
 <h2>Scorecard</h2>
 <div class="tblwrap"><table id="tbl"></table></div>
@@ -965,6 +997,2519 @@ const DATA = {
     }
    }
   }
+ },
+ "cuts": {
+  "ready": true,
+  "method": "matched-pair DiD; conservative SE (shared controls widen it)",
+  "eval_from": "2026-09-21",
+  "eval_to": "2026-10-05",
+  "all": {
+   "n": 37,
+   "stores": [
+    "Blackburn",
+    "Dayton",
+    "Highway 58",
+    "Kimball",
+    "Ooltewah",
+    "Broad St",
+    "East Ridge",
+    "Murphy",
+    "Chapman Hwy",
+    "Dolly Parton",
+    "Greeneville",
+    "Pigeon Forge City Ctr",
+    "Sevierville",
+    "Asheville Hwy",
+    "Cedar Bluff NG",
+    "Fountain City",
+    "Jefferson City",
+    "Antioch",
+    "La Vergne",
+    "Medical Center Pkwy",
+    "Memorial",
+    "New Salem",
+    "LaFollette",
+    "Westland",
+    "Algood",
+    "Crossville",
+    "Harriman",
+    "Monterey",
+    "Sparta",
+    "Innsbrooke",
+    "South Rutherford",
+    "Tullahoma",
+    "East Maryville",
+    "Madisonville",
+    "Central Transit",
+    "Murfreesboro Pike",
+    "Vandy Grand"
+   ],
+   "n_ctl": 18,
+   "dw": {
+    "did": -3.193,
+    "t_chg": -5.399,
+    "c_chg": -2.205,
+    "t_pre": 21.2,
+    "t_post": 15.8,
+    "se": 1.239,
+    "p": 0.0173,
+    "lo": -5.765,
+    "hi": -0.622
+   },
+   "mw": {
+    "did": -1.87,
+    "t_chg": -9.659,
+    "c_chg": -7.789,
+    "t_pre": 32.36,
+    "t_post": 22.7,
+    "se": 2.487,
+    "p": 0.4595,
+    "lo": -7.006,
+    "hi": 3.267
+   },
+   "sod": {
+    "did": -1.323,
+    "t_chg": 0.409,
+    "c_chg": 1.732,
+    "se": 1.257,
+    "p": 0.3051,
+    "lo": -3.948,
+    "hi": 1.301
+   },
+   "som": {
+    "did": -1.308,
+    "t_chg": 3.564,
+    "c_chg": 4.872,
+    "se": 2.185,
+    "p": 0.5548,
+    "lo": -5.81,
+    "hi": 3.193
+   },
+   "usd": {
+    "did": -5.612,
+    "t_chg": -16.915,
+    "c_chg": -11.302,
+    "se": 4.182,
+    "p": 0.1945,
+    "lo": -14.331,
+    "hi": 3.106
+   },
+   "units": {
+    "did": 0.487,
+    "t_chg": 2.536,
+    "c_chg": 2.049,
+    "se": 2.551,
+    "p": 0.85,
+    "lo": -4.723,
+    "hi": 5.696
+   },
+   "ord_d": {
+    "did": -4.947,
+    "t_chg": -7.441,
+    "c_chg": -2.494,
+    "se": 3.49,
+    "p": 0.1677,
+    "lo": -12.105,
+    "hi": 2.211
+   },
+   "ord_m": {
+    "did": -1.031,
+    "t_chg": -7.498,
+    "c_chg": -6.467,
+    "se": 4.375,
+    "p": 0.8155,
+    "lo": -9.989,
+    "hi": 7.927
+   },
+   "am_d": 1.42,
+   "am_m": 5.83,
+   "store_days": 703,
+   "am_d_pre": 1.01,
+   "am_m_pre": 2.27,
+   "c_am_d": 3.22,
+   "c_am_m": 7.31,
+   "c_store_days": 342,
+   "c_am_d_pre": 0.89,
+   "c_am_m_pre": 3.67
+  },
+  "dims": [
+   {
+    "key": "market",
+    "label": "Market type",
+    "levels": [
+     {
+      "level": "Metro/Suburban",
+      "n": 20,
+      "stores": [
+       "Highway 58",
+       "Ooltewah",
+       "Broad St",
+       "East Ridge",
+       "Chapman Hwy",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "Fountain City",
+       "Antioch",
+       "La Vergne",
+       "Medical Center Pkwy",
+       "Memorial",
+       "New Salem",
+       "Westland",
+       "Innsbrooke",
+       "South Rutherford",
+       "East Maryville",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 11,
+      "dw": {
+       "did": -3.714,
+       "t_chg": -5.055,
+       "c_chg": -1.342,
+       "t_pre": 20.76,
+       "t_post": 15.7,
+       "se": 1.643,
+       "p": 0.0427,
+       "lo": -7.285,
+       "hi": -0.143
+      },
+      "mw": {
+       "did": -1.217,
+       "t_chg": -10.145,
+       "c_chg": -8.928,
+       "t_pre": 33.73,
+       "t_post": 23.58,
+       "se": 3.271,
+       "p": 0.7158,
+       "lo": -8.288,
+       "hi": 5.854
+      },
+      "sod": {
+       "did": -1.316,
+       "t_chg": 0.066,
+       "c_chg": 1.382,
+       "se": 1.657,
+       "p": 0.4441,
+       "lo": -4.968,
+       "hi": 2.336
+      },
+      "som": {
+       "did": -3.947,
+       "t_chg": 2.307,
+       "c_chg": 6.255,
+       "se": 2.795,
+       "p": 0.1824,
+       "lo": -10.014,
+       "hi": 2.12
+      },
+      "usd": {
+       "did": -3.719,
+       "t_chg": -14.313,
+       "c_chg": -10.595,
+       "se": 5.556,
+       "p": 0.5166,
+       "lo": -15.89,
+       "hi": 8.453
+      },
+      "units": {
+       "did": 2.861,
+       "t_chg": 5.143,
+       "c_chg": 2.282,
+       "se": 3.416,
+       "p": 0.4137,
+       "lo": -4.339,
+       "hi": 10.062
+      },
+      "ord_d": {
+       "did": -1.695,
+       "t_chg": -2.688,
+       "c_chg": -0.992,
+       "se": 4.583,
+       "p": 0.7167,
+       "lo": -11.476,
+       "hi": 8.085
+      },
+      "ord_m": {
+       "did": 0.231,
+       "t_chg": -7.244,
+       "c_chg": -7.475,
+       "se": 5.45,
+       "p": 0.9669,
+       "lo": -11.541,
+       "hi": 12.003
+      },
+      "am_d": 1.32,
+      "am_m": 5.79,
+      "store_days": 380,
+      "am_d_pre": 1.25,
+      "am_m_pre": 3.48,
+      "c_am_d": 1.91,
+      "c_am_m": 8.61,
+      "c_store_days": 209,
+      "c_am_d_pre": 0.97,
+      "c_am_m_pre": 3.9
+     },
+     {
+      "level": "Small town",
+      "n": 14,
+      "stores": [
+       "Blackburn",
+       "Dayton",
+       "Kimball",
+       "Murphy",
+       "Greeneville",
+       "Jefferson City",
+       "LaFollette",
+       "Algood",
+       "Crossville",
+       "Harriman",
+       "Monterey",
+       "Sparta",
+       "Tullahoma",
+       "Madisonville"
+      ],
+      "n_ctl": 10,
+      "dw": {
+       "did": -3.355,
+       "t_chg": -6.218,
+       "c_chg": -2.863,
+       "t_pre": 21.24,
+       "t_post": 15.03,
+       "se": 1.881,
+       "p": 0.1008,
+       "lo": -7.472,
+       "hi": 0.762
+      },
+      "mw": {
+       "did": -0.816,
+       "t_chg": -8.65,
+       "c_chg": -7.834,
+       "t_pre": 30.16,
+       "t_post": 21.51,
+       "se": 3.811,
+       "p": 0.8339,
+       "lo": -9.072,
+       "hi": 7.44
+      },
+      "sod": {
+       "did": -0.738,
+       "t_chg": 0.738,
+       "c_chg": 1.477,
+       "se": 1.877,
+       "p": 0.7022,
+       "lo": -4.917,
+       "hi": 3.441
+      },
+      "som": {
+       "did": 2.423,
+       "t_chg": 4.122,
+       "c_chg": 1.698,
+       "se": 3.34,
+       "p": 0.4808,
+       "lo": -4.786,
+       "hi": 9.633
+      },
+      "usd": {
+       "did": -7.741,
+       "t_chg": -19.241,
+       "c_chg": -11.5,
+       "se": 5.915,
+       "p": 0.2247,
+       "lo": -21.23,
+       "hi": 5.747
+      },
+      "units": {
+       "did": -1.899,
+       "t_chg": 2.093,
+       "c_chg": 3.991,
+       "se": 3.174,
+       "p": 0.5654,
+       "lo": -9.15,
+       "hi": 5.352
+      },
+      "ord_d": {
+       "did": -9.404,
+       "t_chg": -11.021,
+       "c_chg": -1.617,
+       "se": 4.892,
+       "p": 0.0804,
+       "lo": -20.149,
+       "hi": 1.342
+      },
+      "ord_m": {
+       "did": 0.522,
+       "t_chg": -4.78,
+       "c_chg": -5.302,
+       "se": 6.901,
+       "p": 0.9407,
+       "lo": -14.159,
+       "hi": 15.203
+      },
+      "am_d": 1.5,
+      "am_m": 4.89,
+      "store_days": 266,
+      "am_d_pre": 0.77,
+      "am_m_pre": 0.77,
+      "c_am_d": 2.11,
+      "c_am_m": 5.26,
+      "c_store_days": 190,
+      "c_am_d_pre": 0.54,
+      "c_am_m_pre": 3.75
+     },
+     {
+      "level": "Resort corridor",
+      "n": 3,
+      "stores": [
+       "Dolly Parton",
+       "Pigeon Forge City Ctr",
+       "Sevierville"
+      ],
+      "n_ctl": 2,
+      "dw": {
+       "did": 1.032,
+       "t_chg": -3.862,
+       "c_chg": -4.894,
+       "t_pre": 23.9,
+       "t_post": 20.04,
+       "se": 3.139,
+       "p": 0.7947,
+       "lo": -32.575,
+       "hi": 34.638
+      },
+      "mw": {
+       "did": -11.135,
+       "t_chg": -11.124,
+       "c_chg": 0.012,
+       "t_pre": 33.55,
+       "t_post": 22.42,
+       "se": 7.683,
+       "p": 0.2733,
+       "lo": -41.431,
+       "hi": 19.16
+      },
+      "sod": {
+       "did": -4.104,
+       "t_chg": 1.159,
+       "c_chg": 5.263,
+       "se": 3.848,
+       "p": 0.404,
+       "lo": -21.733,
+       "hi": 13.525
+      },
+      "som": {
+       "did": -1.128,
+       "t_chg": 9.336,
+       "c_chg": 10.464,
+       "se": 7.846,
+       "p": 0.8953,
+       "lo": -26.872,
+       "hi": 24.616
+      },
+      "usd": {
+       "did": -8.303,
+       "t_chg": -23.402,
+       "c_chg": -15.098,
+       "se": 14.774,
+       "p": 0.6188,
+       "lo": -59.634,
+       "hi": 43.028
+      },
+      "units": {
+       "did": -4.21,
+       "t_chg": -12.779,
+       "c_chg": -8.569,
+       "se": 9.403,
+       "p": 0.6849,
+       "lo": -34.237,
+       "hi": 25.817
+      },
+      "ord_d": {
+       "did": -5.827,
+       "t_chg": -22.421,
+       "c_chg": -16.594,
+       "se": 9.289,
+       "p": 0.6061,
+       "lo": -55.133,
+       "hi": 43.478
+      },
+      "ord_m": {
+       "did": -16.685,
+       "t_chg": -21.872,
+       "c_chg": -5.187,
+       "se": 16.559,
+       "p": 0.3882,
+       "lo": -69.534,
+       "hi": 36.163
+      },
+      "am_d": 1.75,
+      "am_m": 10.53,
+      "store_days": 57,
+      "am_d_pre": 0.6,
+      "am_m_pre": 1.19,
+      "c_am_d": 7.89,
+      "c_am_m": 13.16,
+      "c_store_days": 38,
+      "c_am_d_pre": 0.0,
+      "c_am_m_pre": 2.68
+     }
+    ]
+   },
+   {
+    "key": "volume",
+    "label": "Volume (bakery eaches tercile)",
+    "levels": [
+     {
+      "level": "High",
+      "n": 9,
+      "stores": [
+       "Blackburn",
+       "Broad St",
+       "Murphy",
+       "Chapman Hwy",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "Harriman",
+       "East Maryville",
+       "Madisonville"
+      ],
+      "n_ctl": 6,
+      "dw": {
+       "did": -3.08,
+       "t_chg": -5.471,
+       "c_chg": -2.391,
+       "t_pre": 17.49,
+       "t_post": 12.02,
+       "se": 1.987,
+       "p": 0.1674,
+       "lo": -7.831,
+       "hi": 1.671
+      },
+      "mw": {
+       "did": 0.128,
+       "t_chg": -8.075,
+       "c_chg": -8.203,
+       "t_pre": 23.28,
+       "t_post": 15.2,
+       "se": 3.692,
+       "p": 0.9735,
+       "lo": -9.106,
+       "hi": 9.363
+      },
+      "sod": {
+       "did": -1.17,
+       "t_chg": 0.95,
+       "c_chg": 2.12,
+       "se": 2.236,
+       "p": 0.6145,
+       "lo": -6.289,
+       "hi": 3.95
+      },
+      "som": {
+       "did": -0.397,
+       "t_chg": 4.031,
+       "c_chg": 4.428,
+       "se": 4.366,
+       "p": 0.9291,
+       "lo": -9.942,
+       "hi": 9.148
+      },
+      "usd": {
+       "did": -1.781,
+       "t_chg": -16.267,
+       "c_chg": -14.486,
+       "se": 7.235,
+       "p": 0.8118,
+       "lo": -18.519,
+       "hi": 14.956
+      },
+      "units": {
+       "did": 3.97,
+       "t_chg": 3.906,
+       "c_chg": -0.065,
+       "se": 3.799,
+       "p": 0.3294,
+       "lo": -4.941,
+       "hi": 12.881
+      },
+      "ord_d": {
+       "did": -1.359,
+       "t_chg": -2.456,
+       "c_chg": -1.097,
+       "se": 5.203,
+       "p": 0.802,
+       "lo": -13.836,
+       "hi": 11.119
+      },
+      "ord_m": {
+       "did": 4.191,
+       "t_chg": -6.538,
+       "c_chg": -10.729,
+       "se": 6.253,
+       "p": 0.5281,
+       "lo": -11.176,
+       "hi": 19.559
+      },
+      "am_d": 2.34,
+      "am_m": 7.6,
+      "store_days": 171,
+      "am_d_pre": 1.39,
+      "am_m_pre": 3.57,
+      "c_am_d": 3.51,
+      "c_am_m": 7.89,
+      "c_store_days": 114,
+      "c_am_d_pre": 1.49,
+      "c_am_m_pre": 3.87
+     },
+     {
+      "level": "Mid",
+      "n": 13,
+      "stores": [
+       "Dayton",
+       "Kimball",
+       "Ooltewah",
+       "East Ridge",
+       "Dolly Parton",
+       "Fountain City",
+       "Jefferson City",
+       "La Vergne",
+       "New Salem",
+       "LaFollette",
+       "Algood",
+       "Sparta",
+       "South Rutherford"
+      ],
+      "n_ctl": 10,
+      "dw": {
+       "did": -2.566,
+       "t_chg": -5.211,
+       "c_chg": -2.645,
+       "t_pre": 19.6,
+       "t_post": 14.39,
+       "se": 1.854,
+       "p": 0.1834,
+       "lo": -6.462,
+       "hi": 1.33
+      },
+      "mw": {
+       "did": -3.073,
+       "t_chg": -10.484,
+       "c_chg": -7.411,
+       "t_pre": 33.66,
+       "t_post": 23.18,
+       "se": 3.724,
+       "p": 0.4198,
+       "lo": -10.883,
+       "hi": 4.736
+      },
+      "sod": {
+       "did": 0.007,
+       "t_chg": 1.605,
+       "c_chg": 1.598,
+       "se": 1.814,
+       "p": 0.9969,
+       "lo": -3.838,
+       "hi": 3.852
+      },
+      "som": {
+       "did": 0.441,
+       "t_chg": 4.309,
+       "c_chg": 3.868,
+       "se": 2.901,
+       "p": 0.8811,
+       "lo": -5.723,
+       "hi": 6.605
+      },
+      "usd": {
+       "did": -7.036,
+       "t_chg": -18.478,
+       "c_chg": -11.442,
+       "se": 5.455,
+       "p": 0.2202,
+       "lo": -18.856,
+       "hi": 4.784
+      },
+      "units": {
+       "did": -3.11,
+       "t_chg": 1.239,
+       "c_chg": 4.349,
+       "se": 3.055,
+       "p": 0.3257,
+       "lo": -9.656,
+       "hi": 3.436
+      },
+      "ord_d": {
+       "did": -9.965,
+       "t_chg": -10.636,
+       "c_chg": -0.671,
+       "se": 4.989,
+       "p": 0.0607,
+       "lo": -20.427,
+       "hi": 0.498
+      },
+      "ord_m": {
+       "did": -3.919,
+       "t_chg": -8.43,
+       "c_chg": -4.511,
+       "se": 6.558,
+       "p": 0.557,
+       "lo": -17.626,
+       "hi": 9.787
+      },
+      "am_d": 2.43,
+      "am_m": 4.86,
+      "store_days": 247,
+      "am_d_pre": 0.82,
+      "am_m_pre": 0.55,
+      "c_am_d": 3.16,
+      "c_am_m": 6.32,
+      "c_store_days": 190,
+      "c_am_d_pre": 1.07,
+      "c_am_m_pre": 2.68
+     },
+     {
+      "level": "Low",
+      "n": 15,
+      "stores": [
+       "Highway 58",
+       "Greeneville",
+       "Pigeon Forge City Ctr",
+       "Sevierville",
+       "Antioch",
+       "Medical Center Pkwy",
+       "Memorial",
+       "Westland",
+       "Crossville",
+       "Monterey",
+       "Innsbrooke",
+       "Tullahoma",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 11,
+      "dw": {
+       "did": -3.805,
+       "t_chg": -5.518,
+       "c_chg": -1.713,
+       "t_pre": 24.8,
+       "t_post": 19.28,
+       "se": 1.651,
+       "p": 0.036,
+       "lo": -7.326,
+       "hi": -0.284
+      },
+      "mw": {
+       "did": -2.025,
+       "t_chg": -9.894,
+       "c_chg": -7.869,
+       "t_pre": 36.69,
+       "t_post": 26.79,
+       "se": 3.487,
+       "p": 0.5687,
+       "lo": -9.359,
+       "hi": 5.309
+      },
+      "sod": {
+       "did": -2.569,
+       "t_chg": -0.952,
+       "c_chg": 1.617,
+       "se": 1.498,
+       "p": 0.1191,
+       "lo": -5.936,
+       "hi": 0.798
+      },
+      "som": {
+       "did": -3.371,
+       "t_chg": 2.638,
+       "c_chg": 6.009,
+       "se": 2.911,
+       "p": 0.2634,
+       "lo": -9.528,
+       "hi": 2.786
+      },
+      "usd": {
+       "did": -6.677,
+       "t_chg": -15.948,
+       "c_chg": -9.271,
+       "se": 5.804,
+       "p": 0.2672,
+       "lo": -19.004,
+       "hi": 5.649
+      },
+      "units": {
+       "did": 1.514,
+       "t_chg": 2.837,
+       "c_chg": 1.323,
+       "se": 4.301,
+       "p": 0.7282,
+       "lo": -7.406,
+       "hi": 10.434
+      },
+      "ord_d": {
+       "did": -2.751,
+       "t_chg": -7.663,
+       "c_chg": -4.911,
+       "se": 5.13,
+       "p": 0.5975,
+       "lo": -13.439,
+       "hi": 7.936
+      },
+      "ord_m": {
+       "did": -1.66,
+       "t_chg": -7.266,
+       "c_chg": -5.606,
+       "se": 6.556,
+       "p": 0.8025,
+       "lo": -15.294,
+       "hi": 11.974
+      },
+      "am_d": 0.0,
+      "am_m": 5.61,
+      "store_days": 285,
+      "am_d_pre": 0.95,
+      "am_m_pre": 2.98,
+      "c_am_d": 2.87,
+      "c_am_m": 8.61,
+      "c_store_days": 209,
+      "c_am_d_pre": 0.97,
+      "c_am_m_pre": 4.22
+     }
+    ]
+   },
+   {
+    "key": "interstate",
+    "label": "Commuter / interstate corridor",
+    "levels": [
+     {
+      "level": "Yes",
+      "n": 7,
+      "stores": [
+       "Blackburn",
+       "Kimball",
+       "La Vergne",
+       "Algood",
+       "Crossville",
+       "Harriman",
+       "Monterey"
+      ],
+      "n_ctl": 5,
+      "dw": {
+       "did": -4.27,
+       "t_chg": -6.287,
+       "c_chg": -2.017,
+       "t_pre": 20.11,
+       "t_post": 13.82,
+       "se": 2.472,
+       "p": 0.1475,
+       "lo": -10.716,
+       "hi": 2.177
+      },
+      "mw": {
+       "did": 1.577,
+       "t_chg": -7.935,
+       "c_chg": -9.512,
+       "t_pre": 32.96,
+       "t_post": 25.03,
+       "se": 4.857,
+       "p": 0.7591,
+       "lo": -11.054,
+       "hi": 14.207
+      },
+      "sod": {
+       "did": 0.282,
+       "t_chg": 0.994,
+       "c_chg": 0.712,
+       "se": 2.581,
+       "p": 0.9175,
+       "lo": -6.446,
+       "hi": 7.01
+      },
+      "som": {
+       "did": 0.524,
+       "t_chg": 2.994,
+       "c_chg": 2.47,
+       "se": 4.552,
+       "p": 0.9121,
+       "lo": -10.594,
+       "hi": 11.641
+      },
+      "usd": {
+       "did": -6.661,
+       "t_chg": -17.641,
+       "c_chg": -10.98,
+       "se": 8.226,
+       "p": 0.4611,
+       "lo": -29.006,
+       "hi": 15.684
+      },
+      "units": {
+       "did": -3.226,
+       "t_chg": 3.533,
+       "c_chg": 6.759,
+       "se": 4.294,
+       "p": 0.4962,
+       "lo": -15.397,
+       "hi": 8.944
+      },
+      "ord_d": {
+       "did": -13.473,
+       "t_chg": -11.695,
+       "c_chg": 1.778,
+       "se": 5.933,
+       "p": 0.0957,
+       "lo": -30.974,
+       "hi": 4.028
+      },
+      "ord_m": {
+       "did": 3.194,
+       "t_chg": -2.406,
+       "c_chg": -5.6,
+       "se": 8.515,
+       "p": 0.7213,
+       "lo": -17.974,
+       "hi": 24.362
+      },
+      "am_d": 1.5,
+      "am_m": 3.76,
+      "store_days": 133,
+      "am_d_pre": 0.51,
+      "am_m_pre": 0.77,
+      "c_am_d": 2.11,
+      "c_am_m": 4.21,
+      "c_store_days": 95,
+      "c_am_d_pre": 1.07,
+      "c_am_m_pre": 2.14
+     },
+     {
+      "level": "Review",
+      "n": 11,
+      "stores": [
+       "Dayton",
+       "Murphy",
+       "Dolly Parton",
+       "Greeneville",
+       "Pigeon Forge City Ctr",
+       "Sevierville",
+       "Jefferson City",
+       "LaFollette",
+       "Sparta",
+       "Tullahoma",
+       "Madisonville"
+      ],
+      "n_ctl": 10,
+      "dw": {
+       "did": -1.979,
+       "t_chg": -5.639,
+       "c_chg": -3.661,
+       "t_pre": 22.09,
+       "t_post": 16.45,
+       "se": 1.79,
+       "p": 0.284,
+       "lo": -5.749,
+       "hi": 1.792
+      },
+      "mw": {
+       "did": -5.536,
+       "t_chg": -10.369,
+       "c_chg": -4.833,
+       "t_pre": 31.17,
+       "t_post": 20.8,
+       "se": 3.83,
+       "p": 0.1653,
+       "lo": -13.575,
+       "hi": 2.503
+      },
+      "sod": {
+       "did": -2.239,
+       "t_chg": 0.624,
+       "c_chg": 2.862,
+       "se": 1.738,
+       "p": 0.2166,
+       "lo": -5.931,
+       "hi": 1.454
+      },
+      "som": {
+       "did": 1.495,
+       "t_chg": 5.887,
+       "c_chg": 4.392,
+       "se": 3.401,
+       "p": 0.6653,
+       "lo": -5.641,
+       "hi": 8.631
+      },
+      "usd": {
+       "did": -9.381,
+       "t_chg": -21.918,
+       "c_chg": -12.537,
+       "se": 5.664,
+       "p": 0.1182,
+       "lo": -21.442,
+       "hi": 2.681
+      },
+      "units": {
+       "did": -1.215,
+       "t_chg": -2.601,
+       "c_chg": -1.386,
+       "se": 3.85,
+       "p": 0.756,
+       "lo": -9.296,
+       "hi": 6.867
+      },
+      "ord_d": {
+       "did": -5.833,
+       "t_chg": -13.473,
+       "c_chg": -7.641,
+       "se": 5.196,
+       "p": 0.2762,
+       "lo": -16.737,
+       "hi": 5.071
+      },
+      "ord_m": {
+       "did": -6.486,
+       "t_chg": -11.929,
+       "c_chg": -5.443,
+       "se": 7.689,
+       "p": 0.4105,
+       "lo": -22.692,
+       "hi": 9.72
+      },
+      "am_d": 1.44,
+      "am_m": 6.7,
+      "store_days": 209,
+      "am_d_pre": 0.81,
+      "am_m_pre": 0.81,
+      "c_am_d": 3.68,
+      "c_am_m": 7.89,
+      "c_store_days": 190,
+      "c_am_d_pre": 0.54,
+      "c_am_m_pre": 4.11
+     },
+     {
+      "level": "No",
+      "n": 19,
+      "stores": [
+       "Highway 58",
+       "Ooltewah",
+       "Broad St",
+       "East Ridge",
+       "Chapman Hwy",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "Fountain City",
+       "Antioch",
+       "Medical Center Pkwy",
+       "Memorial",
+       "New Salem",
+       "Westland",
+       "Innsbrooke",
+       "South Rutherford",
+       "East Maryville",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 11,
+      "dw": {
+       "did": -3.5,
+       "t_chg": -4.932,
+       "c_chg": -1.432,
+       "t_pre": 21.08,
+       "t_post": 16.15,
+       "se": 1.626,
+       "p": 0.0497,
+       "lo": -6.994,
+       "hi": -0.006
+      },
+      "mw": {
+       "did": -1.017,
+       "t_chg": -9.883,
+       "c_chg": -8.866,
+       "t_pre": 32.83,
+       "t_post": 22.95,
+       "se": 3.243,
+       "p": 0.7584,
+       "lo": -7.95,
+       "hi": 5.916
+      },
+      "sod": {
+       "did": -1.385,
+       "t_chg": 0.069,
+       "c_chg": 1.454,
+       "se": 1.638,
+       "p": 0.4141,
+       "lo": -4.947,
+       "hi": 2.177
+      },
+      "som": {
+       "did": -3.606,
+       "t_chg": 2.429,
+       "c_chg": 6.035,
+       "se": 2.774,
+       "p": 0.2145,
+       "lo": -9.554,
+       "hi": 2.342
+      },
+      "usd": {
+       "did": -3.045,
+       "t_chg": -13.751,
+       "c_chg": -10.706,
+       "se": 5.471,
+       "p": 0.5876,
+       "lo": -14.898,
+       "hi": 8.809
+      },
+      "units": {
+       "did": 2.84,
+       "t_chg": 5.142,
+       "c_chg": 2.302,
+       "se": 3.435,
+       "p": 0.4184,
+       "lo": -4.34,
+       "hi": 10.02
+      },
+      "ord_d": {
+       "did": -1.293,
+       "t_chg": -2.381,
+       "c_chg": -1.088,
+       "se": 4.572,
+       "p": 0.7808,
+       "lo": -10.952,
+       "hi": 8.366
+      },
+      "ord_m": {
+       "did": 0.571,
+       "t_chg": -6.808,
+       "c_chg": -7.38,
+       "se": 5.405,
+       "p": 0.9173,
+       "lo": -10.975,
+       "hi": 12.118
+      },
+      "am_d": 1.39,
+      "am_m": 6.09,
+      "store_days": 361,
+      "am_d_pre": 1.32,
+      "am_m_pre": 3.67,
+      "c_am_d": 1.91,
+      "c_am_m": 8.61,
+      "c_store_days": 209,
+      "c_am_d_pre": 0.97,
+      "c_am_m_pre": 3.9
+     }
+    ]
+   },
+   {
+    "key": "density",
+    "label": "BMG stores within 5 mi",
+    "levels": [
+     {
+      "level": "0-1",
+      "n": 22,
+      "stores": [
+       "Blackburn",
+       "Dayton",
+       "Kimball",
+       "Ooltewah",
+       "Broad St",
+       "Murphy",
+       "Chapman Hwy",
+       "Greeneville",
+       "Pigeon Forge City Ctr",
+       "Asheville Hwy",
+       "Jefferson City",
+       "Antioch",
+       "La Vergne",
+       "LaFollette",
+       "Algood",
+       "Crossville",
+       "Harriman",
+       "Monterey",
+       "Sparta",
+       "Tullahoma",
+       "Madisonville",
+       "Murfreesboro Pike"
+      ],
+      "n_ctl": 14,
+      "dw": {
+       "did": -3.311,
+       "t_chg": -6.264,
+       "c_chg": -2.953,
+       "t_pre": 20.75,
+       "t_post": 14.48,
+       "se": 1.465,
+       "p": 0.0366,
+       "lo": -6.391,
+       "hi": -0.231
+      },
+      "mw": {
+       "did": -1.517,
+       "t_chg": -10.574,
+       "c_chg": -9.057,
+       "t_pre": 32.02,
+       "t_post": 21.45,
+       "se": 2.914,
+       "p": 0.6087,
+       "lo": -7.623,
+       "hi": 4.588
+      },
+      "sod": {
+       "did": -1.666,
+       "t_chg": 0.384,
+       "c_chg": 2.051,
+       "se": 1.436,
+       "p": 0.2646,
+       "lo": -4.735,
+       "hi": 1.403
+      },
+      "som": {
+       "did": 0.355,
+       "t_chg": 4.362,
+       "c_chg": 4.007,
+       "se": 2.71,
+       "p": 0.8971,
+       "lo": -5.257,
+       "hi": 5.967
+      },
+      "usd": {
+       "did": -7.597,
+       "t_chg": -21.3,
+       "c_chg": -13.702,
+       "se": 4.722,
+       "p": 0.1295,
+       "lo": -17.707,
+       "hi": 2.512
+      },
+      "units": {
+       "did": -1.218,
+       "t_chg": 1.354,
+       "c_chg": 2.572,
+       "se": 2.844,
+       "p": 0.6729,
+       "lo": -7.145,
+       "hi": 4.708
+      },
+      "ord_d": {
+       "did": -7.464,
+       "t_chg": -10.236,
+       "c_chg": -2.772,
+       "se": 3.892,
+       "p": 0.0707,
+       "lo": -15.626,
+       "hi": 0.698
+      },
+      "ord_m": {
+       "did": -0.927,
+       "t_chg": -8.728,
+       "c_chg": -7.801,
+       "se": 5.392,
+       "p": 0.865,
+       "lo": -12.046,
+       "hi": 10.192
+      },
+      "am_d": 1.2,
+      "am_m": 5.74,
+      "store_days": 418,
+      "am_d_pre": 0.81,
+      "am_m_pre": 1.38,
+      "c_am_d": 3.76,
+      "c_am_m": 7.14,
+      "c_store_days": 266,
+      "c_am_d_pre": 0.89,
+      "c_am_m_pre": 3.44
+     },
+     {
+      "level": "2-4",
+      "n": 12,
+      "stores": [
+       "Highway 58",
+       "East Ridge",
+       "Dolly Parton",
+       "Sevierville",
+       "Fountain City",
+       "Medical Center Pkwy",
+       "Westland",
+       "Innsbrooke",
+       "South Rutherford",
+       "East Maryville",
+       "Central Transit",
+       "Vandy Grand"
+      ],
+      "n_ctl": 10,
+      "dw": {
+       "did": -2.933,
+       "t_chg": -4.121,
+       "c_chg": -1.188,
+       "t_pre": 21.45,
+       "t_post": 17.33,
+       "se": 1.73,
+       "p": 0.1093,
+       "lo": -6.599,
+       "hi": 0.734
+      },
+      "mw": {
+       "did": -2.299,
+       "t_chg": -9.105,
+       "c_chg": -6.807,
+       "t_pre": 31.19,
+       "t_post": 22.08,
+       "se": 3.676,
+       "p": 0.5396,
+       "lo": -10.022,
+       "hi": 5.425
+      },
+      "sod": {
+       "did": -0.736,
+       "t_chg": 0.266,
+       "c_chg": 1.003,
+       "se": 1.901,
+       "p": 0.7032,
+       "lo": -4.74,
+       "hi": 3.268
+      },
+      "som": {
+       "did": -5.725,
+       "t_chg": 1.825,
+       "c_chg": 7.55,
+       "se": 2.914,
+       "p": 0.0672,
+       "lo": -11.908,
+       "hi": 0.457
+      },
+      "usd": {
+       "did": -3.181,
+       "t_chg": -11.042,
+       "c_chg": -7.861,
+       "se": 5.891,
+       "p": 0.5968,
+       "lo": -15.693,
+       "hi": 9.331
+      },
+      "units": {
+       "did": 1.895,
+       "t_chg": 3.564,
+       "c_chg": 1.669,
+       "se": 4.464,
+       "p": 0.6762,
+       "lo": -7.471,
+       "hi": 11.26
+      },
+      "ord_d": {
+       "did": -2.925,
+       "t_chg": -4.819,
+       "c_chg": -1.894,
+       "se": 5.711,
+       "p": 0.6144,
+       "lo": -14.879,
+       "hi": 9.029
+      },
+      "ord_m": {
+       "did": -1.389,
+       "t_chg": -6.689,
+       "c_chg": -5.3,
+       "se": 6.385,
+       "p": 0.8301,
+       "lo": -14.773,
+       "hi": 11.994
+      },
+      "am_d": 1.75,
+      "am_m": 6.14,
+      "store_days": 228,
+      "am_d_pre": 1.49,
+      "am_m_pre": 4.32,
+      "c_am_d": 2.11,
+      "c_am_m": 8.95,
+      "c_store_days": 190,
+      "c_am_d_pre": 1.07,
+      "c_am_m_pre": 2.5
+     },
+     {
+      "level": "5+",
+      "n": 3,
+      "stores": [
+       "Cedar Bluff NG",
+       "Memorial",
+       "New Salem"
+      ],
+      "n_ctl": 3,
+      "dw": {
+       "did": -3.369,
+       "t_chg": -4.161,
+       "c_chg": -0.791,
+       "t_pre": 23.48,
+       "t_post": 19.32,
+       "se": 2.649,
+       "p": 0.2962,
+       "lo": -11.993,
+       "hi": 5.255
+      },
+      "mw": {
+       "did": -2.736,
+       "t_chg": -5.16,
+       "c_chg": -2.423,
+       "t_pre": 39.55,
+       "t_post": 34.39,
+       "se": 6.247,
+       "p": 0.6843,
+       "lo": -20.179,
+       "hi": 14.706
+      },
+      "sod": {
+       "did": -1.159,
+       "t_chg": 1.159,
+       "c_chg": 2.318,
+       "se": 2.746,
+       "p": 0.703,
+       "lo": -10.207,
+       "hi": 7.888
+      },
+      "som": {
+       "did": 4.167,
+       "t_chg": 4.668,
+       "c_chg": 0.501,
+       "se": 4.775,
+       "p": 0.4407,
+       "lo": -10.134,
+       "hi": 18.467
+      },
+      "usd": {
+       "did": -0.783,
+       "t_chg": -8.253,
+       "c_chg": -7.47,
+       "se": 9.085,
+       "p": 0.937,
+       "lo": -30.671,
+       "hi": 29.104
+      },
+      "units": {
+       "did": 7.359,
+       "t_chg": 7.091,
+       "c_chg": -0.268,
+       "se": 5.911,
+       "p": 0.282,
+       "lo": -9.151,
+       "hi": 23.87
+      },
+      "ord_d": {
+       "did": 5.422,
+       "t_chg": 2.57,
+       "c_chg": -2.852,
+       "se": 8.004,
+       "p": 0.5371,
+       "lo": -17.263,
+       "hi": 28.107
+      },
+      "ord_m": {
+       "did": -0.357,
+       "t_chg": -1.711,
+       "c_chg": -1.354,
+       "se": 8.429,
+       "p": 0.9692,
+       "lo": -29.039,
+       "hi": 28.325
+      },
+      "am_d": 1.75,
+      "am_m": 5.26,
+      "store_days": 57,
+      "am_d_pre": 0.6,
+      "am_m_pre": 0.6,
+      "c_am_d": 3.51,
+      "c_am_m": 5.26,
+      "c_store_days": 57,
+      "c_am_d_pre": 1.19,
+      "c_am_m_pre": 4.76
+     }
+    ]
+   },
+   {
+    "key": "ops",
+    "label": "Ordering discipline before pilot",
+    "levels": [
+     {
+      "level": "Tight",
+      "n": 9,
+      "stores": [
+       "Blackburn",
+       "Ooltewah",
+       "Broad St",
+       "Murphy",
+       "Pigeon Forge City Ctr",
+       "Jefferson City",
+       "La Vergne",
+       "Harriman",
+       "Madisonville"
+      ],
+      "n_ctl": 8,
+      "dw": {
+       "did": -0.891,
+       "t_chg": -5.587,
+       "c_chg": -4.695,
+       "t_pre": 18.37,
+       "t_post": 12.79,
+       "se": 1.727,
+       "p": 0.6171,
+       "lo": -4.744,
+       "hi": 2.962
+      },
+      "mw": {
+       "did": -4.479,
+       "t_chg": -13.113,
+       "c_chg": -8.634,
+       "t_pre": 30.4,
+       "t_post": 17.29,
+       "se": 3.877,
+       "p": 0.2685,
+       "lo": -12.844,
+       "hi": 3.885
+      },
+      "sod": {
+       "did": -2.35,
+       "t_chg": 0.564,
+       "c_chg": 2.914,
+       "se": 1.928,
+       "p": 0.247,
+       "lo": -6.563,
+       "hi": 1.863
+      },
+      "som": {
+       "did": 2.746,
+       "t_chg": 7.383,
+       "c_chg": 4.637,
+       "se": 4.246,
+       "p": 0.5282,
+       "lo": -6.357,
+       "hi": 11.85
+      },
+      "usd": {
+       "did": -7.221,
+       "t_chg": -25.271,
+       "c_chg": -18.05,
+       "se": 5.969,
+       "p": 0.2544,
+       "lo": -20.531,
+       "hi": 6.089
+      },
+      "units": {
+       "did": -2.95,
+       "t_chg": -1.266,
+       "c_chg": 1.685,
+       "se": 4.602,
+       "p": 0.5317,
+       "lo": -12.812,
+       "hi": 6.911
+      },
+      "ord_d": {
+       "did": -2.902,
+       "t_chg": -7.555,
+       "c_chg": -4.652,
+       "se": 5.14,
+       "p": 0.5819,
+       "lo": -14.01,
+       "hi": 8.205
+      },
+      "ord_m": {
+       "did": -9.075,
+       "t_chg": -16.733,
+       "c_chg": -7.658,
+       "se": 7.372,
+       "p": 0.2381,
+       "lo": -24.85,
+       "hi": 6.7
+      },
+      "am_d": 1.75,
+      "am_m": 8.77,
+      "store_days": 171,
+      "am_d_pre": 1.19,
+      "am_m_pre": 1.39,
+      "c_am_d": 3.95,
+      "c_am_m": 6.58,
+      "c_store_days": 152,
+      "c_am_d_pre": 0.67,
+      "c_am_m_pre": 2.68
+     },
+     {
+      "level": "Middle",
+      "n": 12,
+      "stores": [
+       "Kimball",
+       "Chapman Hwy",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "Antioch",
+       "New Salem",
+       "Westland",
+       "Algood",
+       "Innsbrooke",
+       "South Rutherford",
+       "Tullahoma",
+       "East Maryville"
+      ],
+      "n_ctl": 9,
+      "dw": {
+       "did": -4.594,
+       "t_chg": -5.191,
+       "c_chg": -0.596,
+       "t_pre": 19.61,
+       "t_post": 14.42,
+       "se": 1.81,
+       "p": 0.0237,
+       "lo": -8.478,
+       "hi": -0.711
+      },
+      "mw": {
+       "did": -1.321,
+       "t_chg": -9.805,
+       "c_chg": -8.485,
+       "t_pre": 29.9,
+       "t_post": 20.09,
+       "se": 3.377,
+       "p": 0.7024,
+       "lo": -8.655,
+       "hi": 6.014
+      },
+      "sod": {
+       "did": -0.721,
+       "t_chg": 0.572,
+       "c_chg": 1.292,
+       "se": 1.784,
+       "p": 0.6933,
+       "lo": -4.605,
+       "hi": 3.163
+      },
+      "som": {
+       "did": -2.342,
+       "t_chg": 1.7,
+       "c_chg": 4.041,
+       "se": 3.137,
+       "p": 0.4671,
+       "lo": -9.042,
+       "hi": 4.358
+      },
+      "usd": {
+       "did": -7.399,
+       "t_chg": -15.859,
+       "c_chg": -8.46,
+       "se": 5.897,
+       "p": 0.2333,
+       "lo": -20.239,
+       "hi": 5.441
+      },
+      "units": {
+       "did": 0.372,
+       "t_chg": 4.501,
+       "c_chg": 4.129,
+       "se": 3.401,
+       "p": 0.9144,
+       "lo": -6.908,
+       "hi": 7.652
+      },
+      "ord_d": {
+       "did": -6.933,
+       "t_chg": -6.153,
+       "c_chg": 0.78,
+       "se": 4.863,
+       "p": 0.175,
+       "lo": -17.322,
+       "hi": 3.456
+      },
+      "ord_m": {
+       "did": 0.028,
+       "t_chg": -5.334,
+       "c_chg": -5.362,
+       "se": 6.137,
+       "p": 0.9964,
+       "lo": -13.043,
+       "hi": 13.1
+      },
+      "am_d": 1.32,
+      "am_m": 4.82,
+      "store_days": 228,
+      "am_d_pre": 0.74,
+      "am_m_pre": 3.12,
+      "c_am_d": 2.34,
+      "c_am_m": 7.6,
+      "c_store_days": 171,
+      "c_am_d_pre": 1.39,
+      "c_am_m_pre": 3.37
+     },
+     {
+      "level": "Loose",
+      "n": 16,
+      "stores": [
+       "Dayton",
+       "Highway 58",
+       "East Ridge",
+       "Dolly Parton",
+       "Greeneville",
+       "Sevierville",
+       "Fountain City",
+       "Medical Center Pkwy",
+       "Memorial",
+       "LaFollette",
+       "Crossville",
+       "Monterey",
+       "Sparta",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 12,
+      "dw": {
+       "did": -3.438,
+       "t_chg": -5.449,
+       "c_chg": -2.011,
+       "t_pre": 23.97,
+       "t_post": 18.53,
+       "se": 1.689,
+       "p": 0.0559,
+       "lo": -6.971,
+       "hi": 0.095
+      },
+      "mw": {
+       "did": -0.813,
+       "t_chg": -7.606,
+       "c_chg": -6.792,
+       "t_pre": 35.31,
+       "t_post": 27.7,
+       "se": 3.376,
+       "p": 0.8121,
+       "lo": -7.857,
+       "hi": 6.23
+      },
+      "sod": {
+       "did": -1.198,
+       "t_chg": 0.2,
+       "c_chg": 1.398,
+       "se": 1.631,
+       "p": 0.4732,
+       "lo": -4.657,
+       "hi": 2.26
+      },
+      "som": {
+       "did": -2.814,
+       "t_chg": 2.814,
+       "c_chg": 5.627,
+       "se": 2.528,
+       "p": 0.2846,
+       "lo": -8.239,
+       "hi": 2.612
+      },
+      "usd": {
+       "did": -3.368,
+       "t_chg": -13.007,
+       "c_chg": -9.639,
+       "se": 5.311,
+       "p": 0.5354,
+       "lo": -14.668,
+       "hi": 7.933
+      },
+      "units": {
+       "did": 2.506,
+       "t_chg": 3.2,
+       "c_chg": 0.694,
+       "se": 3.521,
+       "p": 0.4839,
+       "lo": -4.784,
+       "hi": 9.796
+      },
+      "ord_d": {
+       "did": -4.608,
+       "t_chg": -8.343,
+       "c_chg": -3.735,
+       "se": 5.099,
+       "p": 0.3755,
+       "lo": -15.154,
+       "hi": 5.939
+      },
+      "ord_m": {
+       "did": 2.7,
+       "t_chg": -3.926,
+       "c_chg": -6.626,
+       "se": 5.779,
+       "p": 0.6452,
+       "lo": -9.32,
+       "hi": 14.72
+      },
+      "am_d": 1.32,
+      "am_m": 4.93,
+      "store_days": 304,
+      "am_d_pre": 1.12,
+      "am_m_pre": 2.12,
+      "c_am_d": 2.63,
+      "c_am_m": 7.89,
+      "c_store_days": 228,
+      "c_am_d_pre": 1.04,
+      "c_am_m_pre": 4.17
+     }
+    ]
+   },
+   {
+    "key": "rd",
+    "label": "Regional director",
+    "levels": [
+     {
+      "level": "Lisa",
+      "n": 8,
+      "stores": [
+       "Blackburn",
+       "Dayton",
+       "Highway 58",
+       "Kimball",
+       "Ooltewah",
+       "Broad St",
+       "East Ridge",
+       "Murphy"
+      ],
+      "n_ctl": 3,
+      "dw": {
+       "did": -1.982,
+       "t_chg": -5.573,
+       "c_chg": -3.592,
+       "t_pre": 18.67,
+       "t_post": 13.09,
+       "se": 2.589,
+       "p": 0.5103,
+       "lo": -11.296,
+       "hi": 7.333
+      },
+      "mw": {
+       "did": -4.804,
+       "t_chg": -11.584,
+       "c_chg": -6.78,
+       "t_pre": 28.49,
+       "t_post": 16.91,
+       "se": 5.312,
+       "p": 0.4336,
+       "lo": -21.892,
+       "hi": 12.285
+      },
+      "sod": {
+       "did": -1.339,
+       "t_chg": -0.023,
+       "c_chg": 1.316,
+       "se": 2.698,
+       "p": 0.6604,
+       "lo": -11.088,
+       "hi": 8.409
+      },
+      "som": {
+       "did": -2.209,
+       "t_chg": 1.292,
+       "c_chg": 3.501,
+       "se": 4.193,
+       "p": 0.6493,
+       "lo": -19.629,
+       "hi": 15.211
+      },
+      "usd": {
+       "did": -8.807,
+       "t_chg": -22.101,
+       "c_chg": -13.294,
+       "se": 8.692,
+       "p": 0.4081,
+       "lo": -42.739,
+       "hi": 25.126
+      },
+      "units": {
+       "did": -4.094,
+       "t_chg": 2.731,
+       "c_chg": 6.825,
+       "se": 4.735,
+       "p": 0.4669,
+       "lo": -21.898,
+       "hi": 13.71
+      },
+      "ord_d": {
+       "did": -9.211,
+       "t_chg": -6.132,
+       "c_chg": 3.079,
+       "se": 6.642,
+       "p": 0.2867,
+       "lo": -34.92,
+       "hi": 16.497
+      },
+      "ord_m": {
+       "did": -8.806,
+       "t_chg": -10.401,
+       "c_chg": -1.595,
+       "se": 8.343,
+       "p": 0.3865,
+       "lo": -39.742,
+       "hi": 22.13
+      },
+      "am_d": 1.32,
+      "am_m": 2.63,
+      "store_days": 152,
+      "am_d_pre": 1.34,
+      "am_m_pre": 1.34,
+      "c_am_d": 1.75,
+      "c_am_m": 3.51,
+      "c_store_days": 57,
+      "c_am_d_pre": 0.0,
+      "c_am_m_pre": 0.6
+     },
+     {
+      "level": "Tiffany",
+      "n": 29,
+      "stores": [
+       "Chapman Hwy",
+       "Dolly Parton",
+       "Greeneville",
+       "Pigeon Forge City Ctr",
+       "Sevierville",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "Fountain City",
+       "Jefferson City",
+       "Antioch",
+       "La Vergne",
+       "Medical Center Pkwy",
+       "Memorial",
+       "New Salem",
+       "LaFollette",
+       "Westland",
+       "Algood",
+       "Crossville",
+       "Harriman",
+       "Monterey",
+       "Sparta",
+       "Innsbrooke",
+       "South Rutherford",
+       "Tullahoma",
+       "East Maryville",
+       "Madisonville",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 15,
+      "dw": {
+       "did": -3.528,
+       "t_chg": -5.35,
+       "c_chg": -1.823,
+       "t_pre": 21.89,
+       "t_post": 16.54,
+       "se": 1.414,
+       "p": 0.0224,
+       "lo": -6.495,
+       "hi": -0.56
+      },
+      "mw": {
+       "did": -1.06,
+       "t_chg": -9.128,
+       "c_chg": -8.068,
+       "t_pre": 33.43,
+       "t_post": 24.3,
+       "se": 2.817,
+       "p": 0.7107,
+       "lo": -6.949,
+       "hi": 4.828
+      },
+      "sod": {
+       "did": -1.319,
+       "t_chg": 0.528,
+       "c_chg": 1.847,
+       "se": 1.423,
+       "p": 0.3677,
+       "lo": -4.333,
+       "hi": 1.695
+      },
+      "som": {
+       "did": -1.06,
+       "t_chg": 4.19,
+       "c_chg": 5.25,
+       "se": 2.529,
+       "p": 0.6793,
+       "lo": -6.308,
+       "hi": 4.189
+      },
+      "usd": {
+       "did": -4.731,
+       "t_chg": -15.484,
+       "c_chg": -10.753,
+       "se": 4.74,
+       "p": 0.3326,
+       "lo": -14.751,
+       "hi": 5.288
+      },
+      "units": {
+       "did": 1.75,
+       "t_chg": 2.482,
+       "c_chg": 0.731,
+       "se": 2.989,
+       "p": 0.5631,
+       "lo": -4.387,
+       "hi": 7.888
+      },
+      "ord_d": {
+       "did": -3.771,
+       "t_chg": -7.802,
+       "c_chg": -4.031,
+       "se": 4.065,
+       "p": 0.3629,
+       "lo": -12.161,
+       "hi": 4.62
+      },
+      "ord_m": {
+       "did": 1.114,
+       "t_chg": -6.697,
+       "c_chg": -7.811,
+       "se": 5.088,
+       "p": 0.8284,
+       "lo": -9.372,
+       "hi": 11.6
+      },
+      "am_d": 1.45,
+      "am_m": 6.72,
+      "store_days": 551,
+      "am_d_pre": 0.92,
+      "am_m_pre": 2.52,
+      "c_am_d": 3.51,
+      "c_am_m": 8.07,
+      "c_store_days": 285,
+      "c_am_d_pre": 1.07,
+      "c_am_m_pre": 4.29
+     }
+    ]
+   },
+   {
+    "key": "site",
+    "label": "Site type",
+    "levels": [
+     {
+      "level": "ENDCAP",
+      "n": 16,
+      "stores": [
+       "Kimball",
+       "Ooltewah",
+       "East Ridge",
+       "Greeneville",
+       "Pigeon Forge City Ctr",
+       "Fountain City",
+       "Antioch",
+       "Memorial",
+       "Westland",
+       "Algood",
+       "Harriman",
+       "Innsbrooke",
+       "South Rutherford",
+       "Central Transit",
+       "Murfreesboro Pike",
+       "Vandy Grand"
+      ],
+      "n_ctl": 12,
+      "dw": {
+       "did": -3.229,
+       "t_chg": -5.825,
+       "c_chg": -2.596,
+       "t_pre": 21.8,
+       "t_post": 15.97,
+       "se": 1.624,
+       "p": 0.0625,
+       "lo": -6.645,
+       "hi": 0.188
+      },
+      "mw": {
+       "did": -0.33,
+       "t_chg": -10.626,
+       "c_chg": -10.295,
+       "t_pre": 33.37,
+       "t_post": 22.74,
+       "se": 3.136,
+       "p": 0.9174,
+       "lo": -6.947,
+       "hi": 6.286
+      },
+      "sod": {
+       "did": -0.969,
+       "t_chg": 0.863,
+       "c_chg": 1.833,
+       "se": 1.654,
+       "p": 0.5658,
+       "lo": -4.466,
+       "hi": 2.527
+      },
+      "som": {
+       "did": -2.074,
+       "t_chg": 3.9,
+       "c_chg": 5.974,
+       "se": 2.927,
+       "p": 0.4868,
+       "lo": -8.178,
+       "hi": 4.031
+      },
+      "usd": {
+       "did": -4.46,
+       "t_chg": -17.998,
+       "c_chg": -13.538,
+       "se": 5.439,
+       "p": 0.424,
+       "lo": -15.969,
+       "hi": 7.049
+      },
+      "units": {
+       "did": 0.325,
+       "t_chg": 2.886,
+       "c_chg": 2.561,
+       "se": 4.094,
+       "p": 0.9373,
+       "lo": -8.128,
+       "hi": 8.779
+      },
+      "ord_d": {
+       "did": -5.35,
+       "t_chg": -8.677,
+       "c_chg": -3.327,
+       "se": 4.888,
+       "p": 0.2855,
+       "lo": -15.481,
+       "hi": 4.782
+      },
+      "ord_m": {
+       "did": 0.969,
+       "t_chg": -7.606,
+       "c_chg": -8.574,
+       "se": 5.953,
+       "p": 0.8722,
+       "lo": -11.384,
+       "hi": 13.321
+      },
+      "am_d": 1.64,
+      "am_m": 6.58,
+      "store_days": 304,
+      "am_d_pre": 0.78,
+      "am_m_pre": 2.68,
+      "c_am_d": 3.51,
+      "c_am_m": 8.33,
+      "c_store_days": 228,
+      "c_am_d_pre": 1.34,
+      "c_am_m_pre": 3.27
+     },
+     {
+      "level": "FREE STANDING",
+      "n": 11,
+      "stores": [
+       "Blackburn",
+       "Highway 58",
+       "Chapman Hwy",
+       "Dolly Parton",
+       "Sevierville",
+       "Asheville Hwy",
+       "Cedar Bluff NG",
+       "La Vergne",
+       "New Salem",
+       "East Maryville",
+       "Madisonville"
+      ],
+      "n_ctl": 7,
+      "dw": {
+       "did": -3.095,
+       "t_chg": -4.397,
+       "c_chg": -1.303,
+       "t_pre": 18.35,
+       "t_post": 13.96,
+       "se": 1.756,
+       "p": 0.1213,
+       "lo": -7.245,
+       "hi": 1.055
+      },
+      "mw": {
+       "did": -5.563,
+       "t_chg": -9.944,
+       "c_chg": -4.38,
+       "t_pre": 29.87,
+       "t_post": 19.93,
+       "se": 3.808,
+       "p": 0.1754,
+       "lo": -14.073,
+       "hi": 2.947
+      },
+      "sod": {
+       "did": -0.965,
+       "t_chg": 0.778,
+       "c_chg": 1.743,
+       "se": 2.072,
+       "p": 0.6508,
+       "lo": -5.559,
+       "hi": 3.628
+      },
+      "som": {
+       "did": -2.845,
+       "t_chg": 2.341,
+       "c_chg": 5.186,
+       "se": 3.513,
+       "p": 0.4344,
+       "lo": -10.533,
+       "hi": 4.843
+      },
+      "usd": {
+       "did": -6.9,
+       "t_chg": -14.05,
+       "c_chg": -7.15,
+       "se": 6.502,
+       "p": 0.3165,
+       "lo": -21.629,
+       "hi": 7.829
+      },
+      "units": {
+       "did": 1.322,
+       "t_chg": 3.123,
+       "c_chg": 1.801,
+       "se": 3.602,
+       "p": 0.7215,
+       "lo": -6.735,
+       "hi": 9.379
+      },
+      "ord_d": {
+       "did": -3.233,
+       "t_chg": -4.108,
+       "c_chg": -0.875,
+       "se": 5.285,
+       "p": 0.5535,
+       "lo": -14.903,
+       "hi": 8.437
+      },
+      "ord_m": {
+       "did": -6.227,
+       "t_chg": -9.15,
+       "c_chg": -2.923,
+       "se": 5.939,
+       "p": 0.325,
+       "lo": -19.918,
+       "hi": 7.464
+      },
+      "am_d": 1.91,
+      "am_m": 5.26,
+      "store_days": 209,
+      "am_d_pre": 1.14,
+      "am_m_pre": 2.92,
+      "c_am_d": 2.26,
+      "c_am_m": 9.02,
+      "c_store_days": 133,
+      "c_am_d_pre": 0.51,
+      "c_am_m_pre": 4.59
+     },
+     {
+      "level": "GAS/CONVENIENCE",
+      "n": 3,
+      "stores": [
+       "Murphy",
+       "Crossville",
+       "Monterey"
+      ],
+      "n_ctl": 3,
+      "dw": {
+       "did": -3.527,
+       "t_chg": -4.757,
+       "c_chg": -1.23,
+       "t_pre": 23.91,
+       "t_post": 19.15,
+       "se": 3.443,
+       "p": 0.3636,
+       "lo": -13.093,
+       "hi": 6.039
+      },
+      "mw": {
+       "did": 5.588,
+       "t_chg": -2.613,
+       "c_chg": -8.201,
+       "t_pre": 34.92,
+       "t_post": 32.3,
+       "se": 5.565,
+       "p": 0.3809,
+       "lo": -10.947,
+       "hi": 22.122
+      },
+      "sod": {
+       "did": -0.564,
+       "t_chg": -0.595,
+       "c_chg": -0.031,
+       "se": 2.56,
+       "p": 0.8442,
+       "lo": -10.565,
+       "hi": 9.437
+      },
+      "som": {
+       "did": -4.668,
+       "t_chg": -0.595,
+       "c_chg": 4.073,
+       "se": 4.086,
+       "p": 0.3674,
+       "lo": -21.568,
+       "hi": 12.232
+      },
+      "usd": {
+       "did": -0.676,
+       "t_chg": -11.736,
+       "c_chg": -11.06,
+       "se": 11.09,
+       "p": 0.9544,
+       "lo": -31.592,
+       "hi": 30.241
+      },
+      "units": {
+       "did": 5.082,
+       "t_chg": 5.888,
+       "c_chg": 0.807,
+       "se": 4.988,
+       "p": 0.3833,
+       "lo": -10.793,
+       "hi": 20.956
+      },
+      "ord_d": {
+       "did": -7.707,
+       "t_chg": -5.945,
+       "c_chg": 1.762,
+       "se": 7.072,
+       "p": 0.3553,
+       "lo": -30.165,
+       "hi": 14.751
+      },
+      "ord_m": {
+       "did": 15.957,
+       "t_chg": 4.866,
+       "c_chg": -11.092,
+       "se": 11.825,
+       "p": 0.2497,
+       "lo": -17.117,
+       "hi": 49.032
+      },
+      "am_d": 0.0,
+      "am_m": 0.0,
+      "store_days": 57,
+      "am_d_pre": 0.6,
+      "am_m_pre": 0.6,
+      "c_am_d": 1.75,
+      "c_am_m": 5.26,
+      "c_store_days": 57,
+      "c_am_d_pre": 1.79,
+      "c_am_m_pre": 1.19
+     },
+     {
+      "level": "DT ONLY",
+      "n": 1,
+      "stores": [
+       "Broad St"
+      ],
+      "n_ctl": 1,
+      "dw": {
+       "did": -5.988,
+       "t_chg": -9.781,
+       "c_chg": -3.793,
+       "t_pre": 19.58,
+       "t_post": 9.8
+      },
+      "mw": {
+       "did": -0.196,
+       "t_chg": -9.819,
+       "c_chg": -9.623,
+       "t_pre": 23.48,
+       "t_post": 13.67
+      },
+      "sod": {
+       "did": 1.692,
+       "t_chg": 1.692,
+       "c_chg": 0.0
+      },
+      "som": {
+       "did": -5.357,
+       "t_chg": 5.169,
+       "c_chg": 10.526
+      },
+      "usd": {
+       "did": -4.037,
+       "t_chg": -26.49,
+       "c_chg": -22.453
+      },
+      "units": {
+       "did": 7.323,
+       "t_chg": 1.257,
+       "c_chg": -6.067
+      },
+      "ord_d": {
+       "did": 0.554,
+       "t_chg": 0.01,
+       "c_chg": -0.544
+      },
+      "ord_m": {
+       "did": 4.014,
+       "t_chg": -15.959,
+       "c_chg": -19.972
+      },
+      "am_d": 5.26,
+      "am_m": 10.53,
+      "store_days": 19,
+      "am_d_pre": 3.57,
+      "am_m_pre": 5.36,
+      "c_am_d": 0.0,
+      "c_am_m": 10.53,
+      "c_store_days": 19,
+      "c_am_d_pre": 0.0,
+      "c_am_m_pre": 0.0
+     },
+     {
+      "level": "TWO TENANT PAD",
+      "n": 1,
+      "stores": [
+       "Medical Center Pkwy"
+      ],
+      "n_ctl": 1,
+      "dw": {
+       "did": -3.732,
+       "t_chg": -3.354,
+       "c_chg": 0.378,
+       "t_pre": 24.12,
+       "t_post": 20.77
+      },
+      "mw": {
+       "did": 7.291,
+       "t_chg": -2.812,
+       "c_chg": -10.103,
+       "t_pre": 40.97,
+       "t_post": 38.16
+      },
+      "sod": {
+       "did": -1.786,
+       "t_chg": -1.786,
+       "c_chg": 0.0
+      },
+      "som": {
+       "did": -5.169,
+       "t_chg": 5.263,
+       "c_chg": 10.432
+      },
+      "usd": {
+       "did": 1.084,
+       "t_chg": -7.393,
+       "c_chg": -8.477
+      },
+      "units": {
+       "did": -1.118,
+       "t_chg": 0.776,
+       "c_chg": 1.894
+      },
+      "ord_d": {
+       "did": -2.266,
+       "t_chg": -1.442,
+       "c_chg": 0.825
+      },
+      "ord_m": {
+       "did": 3.797,
+       "t_chg": -5.483,
+       "c_chg": -9.28
+      },
+      "am_d": 0.0,
+      "am_m": 5.26,
+      "store_days": 19,
+      "am_d_pre": 1.79,
+      "am_m_pre": 0.0,
+      "c_am_d": 0.0,
+      "c_am_m": 15.79,
+      "c_store_days": 19,
+      "c_am_d_pre": 0.0,
+      "c_am_m_pre": 5.36
+     },
+     {
+      "level": "Unknown",
+      "n": 5,
+      "stores": [
+       "Dayton",
+       "Jefferson City",
+       "LaFollette",
+       "Sparta",
+       "Tullahoma"
+      ],
+      "n_ctl": 5,
+      "dw": {
+       "did": -2.43,
+       "t_chg": -6.155,
+       "c_chg": -3.725,
+       "t_pre": 23.63,
+       "t_post": 17.48,
+       "se": 3.14,
+       "p": 0.4633,
+       "lo": -9.792,
+       "hi": 4.932
+      },
+      "mw": {
+       "did": -5.311,
+       "t_chg": -11.503,
+       "c_chg": -6.192,
+       "t_pre": 33.14,
+       "t_post": 21.64,
+       "se": 6.825,
+       "p": 0.463,
+       "lo": -21.588,
+       "hi": 10.966
+      },
+      "sod": {
+       "did": -4.211,
+       "t_chg": -1.071,
+       "c_chg": 3.139,
+       "se": 1.977,
+       "p": 0.0939,
+       "lo": -9.505,
+       "hi": 1.084
+      },
+      "som": {
+       "did": 8.12,
+       "t_chg": 7.011,
+       "c_chg": -1.109,
+       "se": 5.082,
+       "p": 0.1509,
+       "lo": -3.717,
+       "hi": 19.957
+      },
+      "usd": {
+       "did": -11.084,
+       "t_chg": -22.849,
+       "c_chg": -11.766,
+       "se": 7.632,
+       "p": 0.1902,
+       "lo": -29.174,
+       "hi": 7.006
+      },
+      "units": {
+       "did": -4.637,
+       "t_chg": -1.284,
+       "c_chg": 3.353,
+       "se": 3.978,
+       "p": 0.285,
+       "lo": -14.205,
+       "hi": 4.931
+      },
+      "ord_d": {
+       "did": -7.41,
+       "t_chg": -14.405,
+       "c_chg": -6.995,
+       "se": 8.204,
+       "p": 0.3951,
+       "lo": -26.626,
+       "hi": 11.807
+      },
+      "ord_m": {
+       "did": -8.163,
+       "t_chg": -9.646,
+       "c_chg": -1.483,
+       "se": 13.367,
+       "p": 0.5642,
+       "lo": -40.993,
+       "hi": 24.668
+      },
+      "am_d": 0.0,
+      "am_m": 7.37,
+      "store_days": 95,
+      "am_d_pre": 1.07,
+      "am_m_pre": 0.36,
+      "c_am_d": 4.21,
+      "c_am_m": 2.11,
+      "c_store_days": 95,
+      "c_am_d_pre": 1.07,
+      "c_am_m_pre": 3.21
+     }
+    ]
+   }
+  ]
  }
 };
 /* ==DATA_END== */
@@ -1317,6 +3862,97 @@ const conf=[
 
 document.getElementById("conf").innerHTML = conf.map(c=>`<div class="item"><span class="dot ${c.s}"></span><div><b>${c.b}</b><span>${c.t}</span></div></div>`).join("");
 
+
+/* ---------- sub-cohort takeaways + cuts (data: DATA.cuts from cohort_cuts.py) ---------- */
+(function(){
+  const K = DATA.cuts;
+  /* Takeaways are written by hand against one evaluation window; the cut table below is live. */
+  const TAKE_ASOF = {eval_to:"2026-10-05", label:"data through 10/11/26 (3 full-dial weeks, 9/22 to 10/11)"};
+  const CH = {"Proven":"good","Likely":"good","Pass":"good","Not yet":"warn","Watch":"warn","Directional":"na","Too small":"na","Fact":"na"};
+  const TAKE = [
+    ["All 37 stores","Donut waste is down vs. matched controls.","-3.2 pp DiD (test 21.2% to 15.8%), p 0.02.","Proven","Donut pars work."],
+    ["All 37 stores","Munchkin waste is not proven yet.","-1.9 pp DiD, p 0.46. Munchkin orders only -1.0% vs. control.","Not yet","The munchkin dial is barely loaded. Fix orders before judging."],
+    ["Ordering discipline","Savings come from stores that over-ordered.","Middle -4.6 pp (p 0.02). Loose -3.4 pp (p 0.06). Tight -0.9 pp (p 0.62).","Likely","Roll out to Middle and Loose stores first."],
+    ["Market type","Metro and small towns both improve.","Metro -3.7 pp (p 0.04). Small town -3.4 pp (p 0.10).","Likely","No reason to hold either back."],
+    ["Market type","Resort shows no donut gain.","+1.0 pp on 3 stores. Orders fell 22% in test and 17% in control.","Too small","Post-summer drop hides it. Keep the separate seasonal rule."],
+    ["Volume","Every volume tier improves.","Low -3.8 pp (p 0.04). High -3.1 pp, Mid -2.6 pp (not yet significant).","Likely","Volume is not a reason to exclude a store."],
+    ["Commuter / interstate","Interstate stores cut the hardest.","Donut orders -13.5% vs. control. Waste -4.3 pp (7 stores, p 0.15).","Directional","Promising. 11 stores still tagged Review; confirm them."],
+    ["Order compliance","Metro, high-volume and dense stores barely cut orders.","Donut orders vs. control: Metro -1.7%, High volume -1.4%, 5+ nearby +5.4%. Small town -9.4%.","Fact","Ask the DMs why. Savings are being left on the table."],
+    ["Sales protection","No cut shows a real bakery-unit loss.","Every confidence band spans zero. Deepest cutters lean soft: Resort -4.2%, Interstate -3.2%.","Watch","Recheck at 6 full-dial weeks."],
+    ["Donut guardrail","Donut AM sell-outs pass in every cut of 3+ stores.","Test 1.4% vs. 2.5% ceiling. Highest: Mid volume 2.4%. Controls 3.2%.","Pass","No availability cost on donuts."],
+    ["Munchkin guardrail","Munchkin AM sell-outs are over 4.6% in both arms.","Test 5.8%, control 7.3% (pre 2.3% / 3.7%). Tight stores 8.8%.","Watch","Not caused by the pilot. Check supply or seasonality."]
+  ];
+  const takeTbl = document.getElementById("takeTbl"), takeNote = document.getElementById("takeNote");
+  takeTbl.innerHTML = `<thead><tr><th>Cut</th><th>Finding</th><th>Evidence</th><th>Read</th><th>So what</th></tr></thead><tbody>`
+    + TAKE.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="chip ${CH[r[3]]||"na"}">${r[3]}</span></td><td>${r[4]}</td></tr>`).join("") + `</tbody>`;
+  const cur = (K && K.ready) ? K.eval_to : null;
+  if(cur && cur!==TAKE_ASOF.eval_to){
+    takeNote.className="ct-note warn";
+    takeNote.textContent=`Written on ${TAKE_ASOF.label}. The cut table below now runs through the week of ${cur}. Re-check before quoting.`;
+  } else {
+    takeNote.textContent=`Written on ${TAKE_ASOF.label}. DiD = test change minus its own matched control's change, vs. the 8-week pre-period. Proven = p under 0.05. Detail below in "Sub-cohort cuts".`;
+  }
+
+  const wrap = document.getElementById("cutsWrap"), tbl = document.getElementById("cutsTbl"), note = document.getElementById("cutsNote");
+  if(!K || !K.ready){ wrap.style.display="none"; note.textContent="Sub-cohort cuts appear after the next data pull."; return; }
+  const SO_D = DATA.meta.ceilings.so_d, SO_M = DATA.meta.ceilings.so_m, BAND = DATA.meta.ceilings.units_band;
+  const LIM = 10, TIPS = [];
+  function ciBar(m, n){
+    const Wd=96, Ht=20, pad=7, x=v=>pad+(Math.max(-LIM,Math.min(LIM,v))+LIM)/(2*LIM)*(Wd-2*pad);
+    let g=`<line x1="${x(0)}" y1="1" x2="${x(0)}" y2="${Ht-1}" stroke="var(--ink-3)" stroke-width="1"/>`;
+    [-5,5].forEach(t=>{ g+=`<line x1="${x(t)}" y1="${Ht/2-3}" x2="${x(t)}" y2="${Ht/2+3}" stroke="var(--line)" stroke-width="1"/>`; });
+    if(m && m.did!=null){
+      const down = m.hi!=null && m.hi<0, up = m.lo!=null && m.lo>0, small = n<5;
+      const col = down ? "var(--good)" : up ? "var(--bad)" : "var(--ink-3)";
+      if(m.lo!=null && m.hi!=null){
+        g+=`<line x1="${x(m.lo)}" y1="${Ht/2}" x2="${x(m.hi)}" y2="${Ht/2}" stroke="${col}" stroke-width="4" stroke-linecap="round" opacity=".45"${small?' stroke-dasharray="3 3"':''}/>`;
+        if(m.lo<-LIM) g+=`<path d="M1,${Ht/2} l6,-4 v8z" fill="${col}"/>`;
+        if(m.hi>LIM) g+=`<path d="M${Wd-1},${Ht/2} l-6,-4 v8z" fill="${col}"/>`;
+      }
+      g+=`<circle cx="${x(m.did)}" cy="${Ht/2}" r="4.5" fill="${small?"var(--surface)":col}" stroke="${down||up?col:"var(--ink-2)"}" stroke-width="2"/>`;
+    }
+    return `<svg width="${Wd}" height="${Ht}" viewBox="0 0 ${Wd} ${Ht}" aria-hidden="true">${g}</svg>`;
+  }
+  const pTxt = m => (m && m.p!=null) ? `<span class="ct-p${m.p<0.05?" sig":""}">p ${m.p<0.001?"<0.001":fmt(m.p,2)}</span>` : `<span class="ct-p">too few stores</span>`;
+  function didCells(m, n, label, what){
+    const i = TIPS.length;
+    TIPS.push(!m||m.did==null ? null : `<b>${label}: ${what} waste</b><br>DiD ${sPP(m.did)}${m.lo!=null?` (95% CI ${sPP(m.lo)} to ${sPP(m.hi)})`:""}<br>Test ${sPP(m.t_chg)} vs. own controls ${sPP(m.c_chg)}<br>${n} test store${n===1?"":"s"}${n<5?" (directional only)":""}`);
+    return `<td>${m&&m.did!=null?sPP(m.did):"–"}${pTxt(m)}</td><td class="ct-ci" data-i="${i}">${ciBar(m,n)}</td>`;
+  }
+  const pctCell = (m, softBelow, softAbove)=>{
+    if(!m || m.did==null) return `<td>–</td>`;
+    const v=m.did, soft=(softBelow!=null&&v<softBelow)||(softAbove!=null&&v>softAbove);
+    return `<td class="${soft?"ct-soft":""}">${sgn(rz(v,1),1,"%")}</td>`;
+  };
+  const amCell = (t,c,ceil)=> t==null ? `<td>–</td>` : `<td><span class="${t>ceil?"ct-over":""}">${fmt(t,1)}%</span><span class="ct-n">/ ${c==null?"–":fmt(c,1)+"%"}</span></td>`;
+  function row(label, r, cls){
+    const n=r.n||0, dw=r.dw||{};
+    const pp = dw.t_pre!=null ? `${fmt(dw.t_pre,1)}% → ${fmt(dw.t_post,1)}%` : "–";
+    return `<tr class="${cls||""}"><td>${label}<span class="ct-n">${n} test · ${r.n_ctl||0} ctl</span></td><td>${pp}</td>`
+      + didCells(r.dw,n,label,"Donut") + didCells(r.mw,n,label,"Munchkin")
+      + pctCell(r.ord_d,null,-3) + pctCell(r.ord_m,null,-3) + pctCell(r.units,-BAND,null)
+      + amCell(r.am_d,r.c_am_d,SO_D) + amCell(r.am_m,r.c_am_m,SO_M) + `</tr>`;
+  }
+  const scale = `<span class="ct-p">scale ±10 pp, bar = 95% CI</span>`;
+  let h = `<thead><tr><th>Cut</th><th class="test">Donut waste, test<br>pre → now</th><th colspan="2">Donut waste DiD${scale}</th><th colspan="2">Munchkin waste DiD${scale}</th>`
+    + `<th>Donut<br>orders</th><th>Munch<br>orders</th><th>Bakery<br>units</th><th>Donut AM<br>sell-out T / C</th><th>Munch AM<br>sell-out T / C</th></tr></thead><tbody>`;
+  h += row("All 37 test stores", K.all, "ct-all");
+  K.dims.forEach(d=>{
+    h += `<tr class="ct-grp"><td colspan="11">${d.label}</td></tr>`;
+    d.levels.forEach(l=>{ h += row(l.level, l); });
+  });
+  tbl.innerHTML = h + `</tbody>`;
+  tbl.querySelectorAll("td.ct-ci").forEach(td=>{
+    td.addEventListener("mousemove",ev=>{ const t=TIPS[+td.dataset.i]; if(!t) return; tip.innerHTML=t; tip.style.opacity=1; tip.style.left=(ev.clientX+12)+"px"; tip.style.top=(ev.clientY-10)+"px"; });
+    td.addEventListener("mouseleave",()=>{ tip.style.opacity=0; });
+  });
+  note.innerHTML = `<b>How to read it.</b> Each test store is compared with its own matched control from the design workbook, so resort tests face resort controls and small towns face small towns. `
+    + `DiD = test change minus matched-control change, 8-week pre vs. ${EVAL_LABEL} weeks ${K.eval_from} to ${K.eval_to}. `
+    + `Green bar = reduction proven at 95%. Grey = not yet. Hollow dot and dashed bar = under 5 stores, directional only. `
+    + `Bars are deliberately conservative: a control shared by several test stores counts once. The All-37 row differs slightly from the headline cards, which compare against all 19 controls. `
+    + `<b>Commuter</b> = the interstate-corridor flag from the design workbook; "Review" stores were never confirmed by ops. `
+    + `Orders and bakery units are % change vs. matched control (amber = orders cut less than 3%, or units down more than ${BAND}%). Sell-out ceilings ${SO_D}% donut / ${SO_M}% munchkin; red = test over.`;
+})();
 
 </script>
 </body></html></body></html>
